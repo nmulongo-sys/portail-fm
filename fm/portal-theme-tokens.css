@@ -1,0 +1,37 @@
+/* =============================================================
+   PORTAIL FM — Jetons de thème (design tokens)
+   Feuille de style optionnelle, chargeable via ?themeUrl=…
+   Contient les deux thèmes officiels du portail : clair & sombre.
+   ============================================================= */
+
+html[data-fm-theme="clair"] {
+  --fm-bg:         #efe7d8; /* fond page          */
+  --fm-panel:      #f7f1e6; /* cartes / panneaux  */
+  --fm-panel-2:    #f0e7d6; /* variante panneau   */
+  --fm-ink:        #2a221b; /* texte principal    */
+  --fm-sub:        #6b5d4c; /* texte secondaire   */
+  --fm-line:       rgba(107,74,46,.16); /* bordures */
+  --fm-accent:     #b3763b; /* cuivre (accent)    */
+  --fm-accent-2:   #6b4a2e; /* noyer (accent 2)   */
+  --fm-accent-ink: #f7f1e6; /* texte sur accent   */
+  --fm-staff:      rgba(107,74,46,.06); /* filigrane portée */
+}
+
+html[data-fm-theme="sombre"] {
+  --fm-bg:         #0e0e10; /* noir laqué         */
+  --fm-panel:      #17151a;
+  --fm-panel-2:    #1c1a1f;
+  --fm-ink:        #f5f0e6; /* ivoire             */
+  --fm-sub:        #b5aea2;
+  --fm-line:       rgba(201,162,75,.18);
+  --fm-accent:     #c9a24b; /* or (accent)        */
+  --fm-accent-2:   #7a6a3a; /* bronze (accent 2)  */
+  --fm-accent-ink: #0e0e10;
+  --fm-staff:      rgba(201,162,75,.05);
+}
+
+/* Polices (le portail utilise ces deux familles) */
+:root {
+  --fm-font-display: 'Cormorant Garamond', Georgia, serif;
+  --fm-font-ui:      'Work Sans', system-ui, sans-serif;
+}
