@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fm/responsive.css">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; }
@@ -18,7 +19,7 @@
 <div id="root" style="min-height:100vh; background:var(--bg,#efe7d8); font-family:'Work Sans',sans-serif; transition:background-color .5s ease; padding-bottom:80px;">
 
 <!-- TOP BAR -->
-<div style="max-width:1040px; margin:0 auto; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+<div class="fm-wrap fm-topbar" style="max-width:1040px; margin:0 auto; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
   <div style="display:flex; align-items:center; gap:14px;">
     <div style="width:48px; height:48px; border-radius:10px; background:#ffffff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid var(--line,rgba(107,74,46,.16));"><img src="assets/logo-academie.png" alt="Logo de l'académie" style="width:100%; height:100%; object-fit:contain; padding:3px;"></div>
     <div style="line-height:1.15;">
@@ -26,7 +27,7 @@
       <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em; color:var(--acc,#b3763b); transition:color .5s ease;">ADULTES · PROMOTION 2023</div>
     </div>
   </div>
-  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+  <div class="fm-nav" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
     <a href="index.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Accueil</a>
     <a href="tableau-de-bord.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Tableau de bord</a>
     <a href="journal-de-classe.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Journal de classe</a>
@@ -37,24 +38,24 @@
 </div>
 
 <!-- TITRE -->
-<div style="max-width:1040px; margin:18px auto 0; padding:0 40px;">
+<div class="fm-wrap" style="max-width:1040px; margin:18px auto 0; padding:0 40px;">
   <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">Vue d'ensemble de l'intégration entre modules</div>
   <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:40px; line-height:1.05; color:var(--ink,#2a221b); margin:12px 0 8px; transition:color .5s ease;">Gestion</h1>
   <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--sub,#6b5d4c); text-transform:uppercase;">Personnes · Invitations · Messages · Export</div>
 </div>
 
 <!-- BARRE D'OUTILS -->
-<div style="max-width:1040px; margin:22px auto 0; padding:0 40px;">
+<div class="fm-wrap" style="max-width:1040px; margin:22px auto 0; padding:0 40px;">
   <div id="gOutilsZone" style="display:flex; align-items:center; gap:10px; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:14px 18px; transition:background-color .5s ease,border-color .5s ease;"></div>
 </div>
 
 <!-- COMPTEURS -->
-<div style="max-width:1040px; margin:22px auto 0; padding:0 40px;">
-  <div id="kpiZone" style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;"></div>
+<div class="fm-wrap" style="max-width:1040px; margin:22px auto 0; padding:0 40px;">
+  <div id="kpiZone" class="fm-grid3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;"></div>
 </div>
 
 <!-- LISTES -->
-<div style="max-width:1040px; margin:34px auto 0; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;">
+<div class="fm-wrap fm-grid2" style="max-width:1040px; margin:34px auto 0; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;">
   <div>
     <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:26px; color:var(--ink,#2a221b); margin:0 0 4px; transition:color .5s ease;">Personnes</h2>
     <p style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; color:var(--sub,#6b5d4c); margin:0 0 12px;">CLIQUEZ MD / FM POUR CHANGER LES ATTRIBUTS · ● = COMPTE RELIÉ</p>
