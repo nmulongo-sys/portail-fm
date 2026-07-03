@@ -1,0 +1,34 @@
+/* =============================================================
+   PORTAIL FM — Adaptations mobiles (media queries)
+   Le rendu bureau reste strictement inchangé : ces règles ne
+   s'appliquent que sous 760 px de large. Les pages posent des
+   classes structurelles (fm-wrap, fm-topbar, fm-nav, fm-grid2,
+   fm-grid3) ; le !important sert à surclasser les styles inline.
+   ============================================================= */
+
+@media (max-width: 760px) {
+  /* Marges latérales réduites */
+  .fm-wrap { padding-left: 18px !important; padding-right: 18px !important; }
+
+  /* Barre du haut : logo + nav passent en deux lignes */
+  .fm-topbar { flex-wrap: wrap !important; row-gap: 12px !important; }
+
+  /* Pilules de navigation : retour à la ligne */
+  .fm-nav { flex-wrap: wrap !important; row-gap: 8px !important; }
+  .fm-nav a, .fm-nav > div { padding: 8px 12px !important; }
+
+  /* Toutes les grilles passent en une colonne */
+  .fm-grid2, .fm-grid3 { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  /* Titres plus compacts */
+  h1 { font-size: 32px !important; }
+  h2 { font-size: 24px !important; }
+
+  /* Champs de formulaire : ne pas déborder */
+  .fm-wrap input, .fm-wrap select { min-width: 0 !important; }
+}
+
+@media (max-width: 420px) {
+  h1 { font-size: 27px !important; }
+  .fm-wrap { padding-left: 14px !important; padding-right: 14px !important; }
+}
