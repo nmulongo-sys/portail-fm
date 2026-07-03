@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal de classe — Formation Musicale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: inherit; }
+  input::placeholder, textarea::placeholder { color: var(--sub, #6b5d4c); opacity: .6; }
+</style>
+</head>
+<body>
+
+<div id="root" style="min-height:100vh; background:var(--bg,#efe7d8); font-family:'Work Sans',sans-serif; transition:background-color .5s ease; padding-bottom:80px;">
+
+<!-- TOP BAR -->
+<div style="max-width:1040px; margin:0 auto; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px;">
+  <div style="display:flex; align-items:center; gap:14px;">
+    <div style="width:48px; height:48px; border-radius:10px; background:#ffffff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid var(--line,rgba(107,74,46,.16));"><img src="assets/logo-academie.png" alt="Logo de l'académie" style="width:100%; height:100%; object-fit:contain; padding:3px;"></div>
+    <div style="line-height:1.15;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--ink,#2a221b); transition:color .5s ease;">Formation Musicale</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em; color:var(--acc,#b3763b); transition:color .5s ease;">ADULTES · PROMOTION 2023</div>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="index.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Accueil</a>
+    <a href="tableau-de-bord.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Tableau de bord</a>
+    <div style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); padding:9px 15px; border-radius:999px; transition:background-color .5s ease,color .5s ease;">Journal de classe</div>
+    <button id="themeToggle" onclick="toggleTheme()" style="display:flex; align-items:center; gap:8px; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--ink,#2a221b); background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:9px 16px; cursor:pointer; margin-left:6px; transition:background-color .5s ease,color .5s ease,border-color .5s ease;">☾ Mode sombre</button>
+  </div>
+</div>
+
+<!-- TITRE -->
+<div style="max-width:1040px; margin:18px auto 0; padding:0 40px;">
+  <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">Année 2025–2026 · 4ᵉ année</div>
+  <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:40px; line-height:1.05; color:var(--ink,#2a221b); margin:12px 0 8px; transition:color .5s ease;">Journal de classe</h1>
+  <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--sub,#6b5d4c); text-transform:uppercase;">Écrit par la classe · Une fiche par cours</div>
+</div>
+
+<!-- GRILLE : SOMMAIRE + FICHE -->
+<div style="max-width:1040px; margin:28px auto 0; padding:0 40px; display:grid; grid-template-columns:230px 1fr; gap:24px; align-items:start;">
+  <aside id="sommaire"></aside>
+  <section id="ficheZone"></section>
+</div>
+
+</div>
+
+<script src="fm/theme.js"></script>
+<script src="fm/fm-config.js"></script>
+<script src="fm/fm-sync.js"></script>
+<script src="fm/journal.js"></script>
+</body>
+</html>

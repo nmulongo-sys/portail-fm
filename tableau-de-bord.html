@@ -18,117 +18,179 @@
 
 <div id="root" style="min-height:100vh; background:var(--bg,#efe7d8); font-family:'Work Sans',sans-serif; transition:background-color .5s ease; padding-bottom:80px;">
 
-  <!-- TOP BAR -->
-  <div style="max-width:1040px; margin:0 auto; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px;">
-    <div style="display:flex; align-items:center; gap:14px;">
-      <div style="width:48px; height:48px; border-radius:10px; background:#ffffff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid var(--line,rgba(107,74,46,.16));"><img src="assets/logo-academie.png" alt="Logo de l'académie" style="width:100%; height:100%; object-fit:contain; padding:3px;"></div>
-      <div style="line-height:1.15;">
-        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--ink,#2a221b); transition:color .5s ease;">Formation Musicale</div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em; color:var(--acc,#b3763b); transition:color .5s ease;">ADULTES · PROMOTION 2023</div>
-      </div>
+<!-- TOP BAR -->
+<div style="max-width:1040px; margin:0 auto; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:20px;">
+  <div style="display:flex; align-items:center; gap:14px;">
+    <div style="width:48px; height:48px; border-radius:10px; background:#ffffff; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid var(--line,rgba(107,74,46,.16));"><img src="assets/logo-academie.png" alt="Logo de l'académie" style="width:100%; height:100%; object-fit:contain; padding:3px;"></div>
+    <div style="line-height:1.15;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--ink,#2a221b); transition:color .5s ease;">Formation Musicale</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em; color:var(--acc,#b3763b); transition:color .5s ease;">ADULTES · PROMOTION 2023</div>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
-      <a href="index.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Accueil</a>
-      <div style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); padding:9px 15px; border-radius:999px; transition:background-color .5s ease,color .5s ease;">Tableau de bord</div>
-      <button id="themeToggle" onclick="toggleTheme()" style="display:flex; align-items:center; gap:8px; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--ink,#2a221b); background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:9px 16px; cursor:pointer; margin-left:6px; transition:background-color .5s ease,color .5s ease,border-color .5s ease;">☾ Mode sombre</button>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="index.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Accueil</a>
+    <div style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); padding:9px 15px; border-radius:999px; transition:background-color .5s ease,color .5s ease;">Tableau de bord</div>
+    <a href="journal-de-classe.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Journal de classe</a>
+    <button id="themeToggle" onclick="toggleTheme()" style="display:flex; align-items:center; gap:8px; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--ink,#2a221b); background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:9px 16px; cursor:pointer; margin-left:6px; transition:background-color .5s ease,color .5s ease,border-color .5s ease;">☾ Mode sombre</button>
+  </div>
+</div>
+
+<!-- GREETING + NEXT -->
+<div style="max-width:1040px; margin:14px auto 0; padding:0 40px; display:grid; grid-template-columns:1.3fr 1fr; gap:24px; align-items:stretch;">
+  <div style="position:relative; overflow:hidden; border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:repeating-linear-gradient(0deg, transparent 0 15px, var(--staff,rgba(107,74,46,.06)) 15px 16px), var(--panel,#f7f1e6); padding:44px 40px; transition:background-color .5s ease,border-color .5s ease;">
+    <div id="dateLabel" style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">&nbsp;</div>
+    <h1 id="bonjour" style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:44px; line-height:1.05; color:var(--ink,#2a221b); margin:14px 0 8px; transition:color .5s ease;">Bonjour&nbsp;!</h1>
+    <p style="font-size:15px; line-height:1.7; color:var(--sub,#6b5d4c); max-width:420px; margin:0; transition:color .5s ease;">Profitez de l'été pour garder les doigts déliés — vos outils restent disponibles pendant la pause.</p>
+    <div id="nameSlot" style="margin-top:20px;"></div>
+    <div id="syncSlot" style="margin-top:14px;"></div>
+  </div>
+
+  <div style="border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:var(--panel,#f7f1e6); padding:32px; display:flex; flex-direction:column; justify-content:center; transition:background-color .5s ease,border-color .5s ease;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; margin-bottom:14px; transition:color .5s ease;">Prochain rendez-vous</div>
+    <div id="nextTitre" style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--ink,#2a221b); line-height:1.1; transition:color .5s ease;">—</div>
+    <div id="nextDetail" style="font-size:14px; color:var(--sub,#6b5d4c); margin-top:8px; transition:color .5s ease;">—</div>
+  </div>
+</div>
+
+<!-- PROGRESSION OBJECTIFS -->
+<div style="max-width:1040px; margin:24px auto 0; padding:0 40px;">
+  <div id="progressBanner" style="border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:var(--panel,#f7f1e6); padding:26px 32px; transition:background-color .5s ease,border-color .5s ease;"></div>
+</div>
+
+<!-- OBJECTIFS -->
+<div style="max-width:1040px; margin:40px auto 0; padding:0 40px;">
+  <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Mes objectifs</h2>
+    <button id="objAddBtn" onclick="toggleAddObj()" style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--acc,#b3763b); background:transparent; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:8px 15px; cursor:pointer; transition:border-color .5s ease,color .5s ease;">＋ Ajouter un objectif</button>
+  </div>
+  <p style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--sub,#6b5d4c); margin:0 0 20px;">ISSUS DU JOURNAL DE CLASSE · CLIQUEZ SUR LE STATUT POUR LE FAIRE ÉVOLUER</p>
+  <div id="objForm"></div>
+  <div id="objList"></div>
+</div>
+
+<!-- OUTILS -->
+<div style="max-width:1040px; margin:40px auto 0; padding:0 40px;">
+  <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Vos outils</h2>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+
+    <a data-app="jam" href="/jam-maker-plus/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
+      <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Jam Maker+</div>
+      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Accompagnement &amp; improvisation guidée.</div>
+    </a>
+
+    <a data-app="lead" href="/leadsheetproject/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
+      <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Lead Sheet</div>
+      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Grilles d'accords &amp; partitions simplifiées.</div>
+    </a>
+
+    <a data-app="magic" href="/magic-drums/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
+      <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Magic Drums</div>
+      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Dunun &amp; djembé — partition interactive.</div>
+    </a>
+
+    <!-- outils ajoutés + tuile d'ajout injectés ici -->
+    <div id="outilsSlot" style="display:contents;"></div>
+  </div>
+</div>
+
+<!-- RENDEZ-VOUS + DOCUMENTS -->
+<div style="max-width:1040px; margin:40px auto 0; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;">
+
+  <div>
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Prochains rendez-vous</h2>
+      <button id="repAddBtn" onclick="toggleAddRep()" style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--acc,#b3763b); background:transparent; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:8px 14px; cursor:pointer; transition:border-color .5s ease;">＋ Répétition</button>
+    </div>
+    <div id="repForm"></div>
+    <div id="rdvList"></div>
+  </div>
+
+  <div>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Documents récents</h2>
+
+    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
+      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Solfège · Chapitre 12.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">2.4 Mo · PDF</div></div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
+      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Dictées mélodiques · série 4.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">1.1 Mo · PDF</div></div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; transition:border-color .5s ease;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
+      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Grille — standards jazz.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">840 Ko · PDF</div></div>
     </div>
   </div>
 
-  <!-- GREETING + NEXT -->
-  <div style="max-width:1040px; margin:14px auto 0; padding:0 40px; display:grid; grid-template-columns:1.3fr 1fr; gap:24px; align-items:stretch;">
-    <div style="position:relative; overflow:hidden; border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:repeating-linear-gradient(0deg, transparent 0 15px, var(--staff,rgba(107,74,46,.06)) 15px 16px), var(--panel,#f7f1e6); padding:44px 40px; transition:background-color .5s ease,border-color .5s ease;">
-      <div id="dateLabel" style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">&nbsp;</div>
-      <h1 id="bonjour" style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:44px; line-height:1.05; color:var(--ink,#2a221b); margin:14px 0 8px; transition:color .5s ease;">Bonjour&nbsp;!</h1>
-      <p style="font-size:15px; line-height:1.7; color:var(--sub,#6b5d4c); max-width:420px; margin:0; transition:color .5s ease;">Profitez de l'été pour garder les doigts déliés — vos outils restent disponibles pendant la pause.</p>
-      <div id="nameSlot" style="margin-top:20px;"></div>
-    </div>
-
-    <div style="border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:var(--panel,#f7f1e6); padding:32px; display:flex; flex-direction:column; justify-content:center; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; margin-bottom:14px; transition:color .5s ease;">Prochain rendez-vous</div>
-      <div id="nextTitre" style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--ink,#2a221b); line-height:1.1; transition:color .5s ease;">—</div>
-      <div id="nextDetail" style="font-size:14px; color:var(--sub,#6b5d4c); margin-top:8px; transition:color .5s ease;">—</div>
-    </div>
-  </div>
-
-  <!-- PROGRESSION OBJECTIFS -->
-  <div style="max-width:1040px; margin:24px auto 0; padding:0 40px;">
-    <div id="progressBanner" style="border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:var(--panel,#f7f1e6); padding:26px 32px; transition:background-color .5s ease,border-color .5s ease;"></div>
-  </div>
-
-  <!-- OBJECTIFS -->
-  <div style="max-width:1040px; margin:40px auto 0; padding:0 40px;">
-    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px;">
-      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Mes objectifs</h2>
-      <button id="objAddBtn" onclick="toggleAddObj()" style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--acc,#b3763b); background:transparent; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:8px 15px; cursor:pointer; transition:border-color .5s ease,color .5s ease;">＋ Ajouter un objectif</button>
-    </div>
-    <p style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:var(--sub,#6b5d4c); margin:0 0 20px;">ISSUS DU JOURNAL DE CLASSE · CLIQUEZ SUR LE STATUT POUR LE FAIRE ÉVOLUER</p>
-    <div id="objForm"></div>
-    <div id="objList"></div>
-  </div>
-
-  <!-- OUTILS -->
-  <div style="max-width:1040px; margin:40px auto 0; padding:0 40px;">
-    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Vos outils</h2>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-
-      <a data-app="jam" href="/jam-maker-plus/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
-        <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
-        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Jam Maker+</div>
-        <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Accompagnement &amp; improvisation guidée.</div>
-      </a>
-
-      <a data-app="lead" href="/leadsheetproject/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
-        <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
-        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Lead Sheet</div>
-        <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Grilles d'accords &amp; partitions simplifiées.</div>
-      </a>
-
-      <a data-app="magic" href="/magic-drums/?theme=clair" target="_blank" rel="noopener" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
-        <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
-        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Magic Drums</div>
-        <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5; transition:color .5s ease;">Dunun &amp; djembé — partition interactive.</div>
-      </a>
-
-      <!-- outils ajoutés + tuile d'ajout injectés ici -->
-      <div id="outilsSlot" style="display:contents;"></div>
-    </div>
-  </div>
-
-  <!-- RENDEZ-VOUS + DOCUMENTS -->
-  <div style="max-width:1040px; margin:40px auto 0; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;">
-
-    <div>
-      <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
-        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Prochains rendez-vous</h2>
-        <button id="repAddBtn" onclick="toggleAddRep()" style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--acc,#b3763b); background:transparent; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:8px 14px; cursor:pointer; transition:border-color .5s ease;">＋ Répétition</button>
-      </div>
-      <div id="repForm"></div>
-      <div id="rdvList"></div>
-    </div>
-
-    <div>
-      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Documents récents</h2>
-
-      <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
-        <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-        <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Solfège · Chapitre 12.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">2.4 Mo · PDF</div></div>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
-        <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-        <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Dictées mélodiques · série 4.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">1.1 Mo · PDF</div></div>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; transition:border-color .5s ease;">
-        <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-        <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Grille — standards jazz.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">840 Ko · PDF</div></div>
-      </div>
-    </div>
-
-  </div>
+</div>
 </div>
 
 <script src="fm/theme.js"></script>
 <script src="fm/dashboard.js"></script>
+<script src="fm/fm-config.js"></script>
+<script src="fm/fm-sync.js"></script>
+<script>
+/* UI auth minimale (magic-link). N'apparaît que si fm-config.js est présent.
+   Sans config -> aucune nouvelle UI, comportement 100% local inchangé. */
+(function () {
+  var slot = document.getElementById('syncSlot');
+  if (!slot || !window.FM_CONFIG || !window.fmSync) return;
+
+  var LINK = "font-family:'Work Sans',sans-serif; font-size:12px; color:var(--sub,#6b5d4c); background:transparent; border:none; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:3px;";
+  var INP  = "font-family:'Work Sans',sans-serif; font-size:14px; padding:10px 12px; border-radius:8px; border:1px solid var(--line,rgba(107,74,46,.16)); background:var(--bg,#efe7d8); color:var(--ink,#2a221b); outline:none;";
+  var PRIM = "font-family:'Work Sans',sans-serif; font-weight:600; font-size:13px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); border:none; border-radius:8px; cursor:pointer; padding:10px 16px;";
+
+  var opening = false, msg = '';
+
+  function render() {
+    var user = window.fmSync.user();
+    if (user) {
+      slot.innerHTML =
+        '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">' +
+        '<span style="font-family:\'Work Sans\',sans-serif; font-size:12px; color:var(--acc,#b3763b);">\u2713 Synchronis\u00e9 \u00b7 ' + esc(user.email || '') + '</span>' +
+        '<button id="syncOut" style="' + LINK + '">Se d\u00e9connecter</button>' +
+        '</div>';
+      document.getElementById('syncOut').onclick = function () { window.fmSync.logout(); };
+      return;
+    }
+    if (!opening) {
+      slot.innerHTML = '<button id="syncOpen" style="' + LINK + '">Synchroniser entre mes appareils</button>' +
+        (msg ? '<div style="font-size:12px; color:var(--sub,#6b5d4c); margin-top:8px;">' + esc(msg) + '</div>' : '');
+      document.getElementById('syncOpen').onclick = function () { opening = true; msg=''; render(); };
+      return;
+    }
+    slot.innerHTML =
+      '<div style="display:flex; gap:8px; max-width:380px; flex-wrap:wrap;">' +
+      '<input id="syncMail" type="email" placeholder="Votre e-mail" style="flex:1; min-width:180px; ' + INP + '">' +
+      '<button id="syncSend" style="' + PRIM + '">Recevoir le lien</button>' +
+      '</div>' +
+      '<button id="syncBack" style="' + LINK + ' margin-top:8px;">Annuler</button>';
+    var send = document.getElementById('syncSend');
+    var mail = document.getElementById('syncMail');
+    send.onclick = async function () {
+      var v = (mail.value || '').trim();
+      if (!v) { mail.focus(); return; }
+      send.textContent = 'Envoi\u2026'; send.disabled = true;
+      var r = await window.fmSync.login(v);
+      opening = false;
+      msg = r && r.ok ? 'Lien envoy\u00e9 \u2014 v\u00e9rifiez votre bo\u00eete mail.'
+                      : (r && r.offline ? 'Synchronisation indisponible pour le moment.' : 'Envoi impossible. R\u00e9essayez.');
+      render();
+    };
+    mail.addEventListener('keydown', function (e) { if (e.key === 'Enter') send.onclick(); });
+    document.getElementById('syncBack').onclick = function () { opening = false; render(); };
+  }
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  window.fmSync.ready.then(function(){ render(); });
+  window.fmSync.onChange(function(){ opening = false; render(); });
+  render();
+})();
+</script>
 </body>
 </html>
