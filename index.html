@@ -12,6 +12,10 @@
   * { box-sizing: border-box; }
   body { margin: 0; }
   a { color: inherit; }
+  /* Cartes du lanceur : toute la carte est cliquable, retour visuel net */
+  .fm-card { display: block; text-decoration: none; background: var(--panel,#f7f1e6); border: 1px solid var(--line,rgba(107,74,46,.16)); border-radius: 14px; padding: 26px; transition: background-color .5s ease, border-color .25s ease, transform .18s ease, box-shadow .18s ease; }
+  .fm-card:hover { transform: translateY(-3px); border-color: var(--acc,#b3763b); box-shadow: 0 10px 26px rgba(107,74,46,.14); }
+  .fm-card:hover .fm-card-go { background: var(--acc2,#6b4a2e); }
 </style>
 </head>
 <body>
@@ -39,90 +43,88 @@
 
 <!-- HERO -->
 <div class="fm-wrap" style="max-width:920px; margin:0 auto; padding:0 40px;">
-  <div style="position:relative; overflow:hidden; border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:repeating-linear-gradient(0deg, transparent 0 15px, var(--staff,rgba(107,74,46,.06)) 15px 16px), var(--panel,#f7f1e6); padding:56px 48px 52px; transition:background-color .5s ease,border-color .5s ease;">
+  <div style="position:relative; overflow:hidden; border-radius:16px; border:1px solid var(--line,rgba(107,74,46,.16)); background:repeating-linear-gradient(0deg, transparent 0 15px, var(--staff,rgba(107,74,46,.06)) 15px 16px), var(--panel,#f7f1e6); padding:44px 48px 40px; transition:background-color .5s ease,border-color .5s ease;">
     <img src="assets/prof-violon.png" alt="" style="position:absolute; top:0; right:0; width:58%; height:100%; object-fit:cover; object-position:center 20%; opacity:.12; filter:grayscale(1) sepia(.5) contrast(.95); -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 65%); mask-image:linear-gradient(90deg, transparent 0%, #000 65%); pointer-events:none; user-select:none;">
     <div style="position:relative; z-index:1;">
       <div style="display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.24em; color:var(--acc,#b3763b); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:5px 13px; transition:color .5s ease,border-color .5s ease;">ESPACE DE CLASSE · 4ᵉ ANNÉE</div>
-      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:48px; line-height:1.05; color:var(--ink,#2a221b); margin:22px 0 14px; letter-spacing:-0.01em; transition:color .5s ease;">Bienvenue dans votre<br>portail de formation.</h1>
-      <p style="font-size:16px; line-height:1.7; color:var(--sub,#6b5d4c); max-width:500px; margin:0; transition:color .5s ease;">Vos outils d'entraînement, vos cours et le planning de l'académie, réunis en un seul endroit. Continuons le solfège ensemble jusqu'en 2027.</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:44px; line-height:1.05; color:var(--ink,#2a221b); margin:20px 0 12px; letter-spacing:-0.01em; transition:color .5s ease;">Bienvenue. Par où<br>voulez-vous commencer&nbsp;?</h1>
+      <p style="font-size:16px; line-height:1.7; color:var(--sub,#6b5d4c); max-width:520px; margin:0; transition:color .5s ease;">Cliquez simplement sur une carte ci-dessous : chaque page vous explique le reste. Impossible de casser quoi que ce soit — explorez tranquillement.</p>
     </div>
   </div>
 </div>
 
-<!-- OUTILS -->
+<!-- ESPACE DE CLASSE -->
 <div class="fm-wrap" style="max-width:920px; margin:44px auto 0; padding:0 40px;">
   <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
-    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Vos outils</h2>
-    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:var(--acc,#b3763b); transition:color .5s ease;">3 APPLICATIONS</div>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Votre espace de classe</h2>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:var(--acc,#b3763b); transition:color .5s ease;">POUR TOUS LES JOURS</div>
   </div>
-  <div class="fm-grid3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+  <div class="fm-grid2" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
-    <div style="background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; transition:border-color .5s ease;"></div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Jam Maker+</div>
-      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 18px; line-height:1.5; transition:color .5s ease;">Accompagnement &amp; improvisation guidée.</div>
-      <a data-app="jam" href="/jam-maker-plus/?theme=clair" target="_blank" rel="noopener" style="display:block; text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:10px; border-radius:7px; cursor:pointer; transition:background-color .5s ease,color .5s ease;">Ouvrir l'app</a>
-    </div>
+    <a class="fm-card" href="tableau-de-bord.html">
+      <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">♪</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Tableau de bord</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Votre page à vous : vos objectifs de travail, votre progression en un coup d'œil et vos prochains rendez-vous. C'est ici que tout commence.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
+    </a>
 
-    <div style="background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="height:42px; width:42px; border-radius:9px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; transition:border-color .5s ease;"></div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Lead Sheet</div>
-      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 18px; line-height:1.5; transition:color .5s ease;">Grilles d'accords &amp; partitions simplifiées.</div>
-      <a data-app="lead" href="/leadsheetproject/?theme=clair" target="_blank" rel="noopener" style="display:block; text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:10px; border-radius:7px; cursor:pointer; transition:background-color .5s ease,color .5s ease;">Ouvrir l'app</a>
-    </div>
+    <a class="fm-card" href="journal-de-classe.html">
+      <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">✎</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Journal de classe</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Ce qu'on a vu à chaque cours, les devoirs et les documents partagés. Écrit par la classe, pour la classe — parfait si vous avez raté une séance.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
+    </a>
 
-    <a href="journal-de-classe.html" style="text-decoration:none; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; display:block; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="height:42px; width:42px; border-radius:9px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:22px; transition:border-color .5s ease,color .5s ease;">✎</div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Journal de classe</div>
-      <div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 18px; line-height:1.5; transition:color .5s ease;">Le suivi quotidien de la classe.</div>
-      <div style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:10px; border-radius:7px; transition:background-color .5s ease,color .5s ease;">Ouvrir la page</div>
+    <a class="fm-card" href="annuaire.html">
+      <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">✉</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Annuaire</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Les personnes qui nous entourent : la classe et les amis percussionnistes. Proposez une répétition ou une jam, répondez aux invitations, discutez en groupe.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
+    </a>
+
+    <a class="fm-card" href="gestion.html">
+      <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">≡</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Gestion</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">La vue d'ensemble : qui est inscrit, où en sont les invitations et les messages. Surtout utile pour l'organisation — les curieux sont les bienvenus.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
     </a>
 
   </div>
 </div>
 
-<!-- DEUX COLONNES : PLANNING + TELECHARGEMENTS -->
-<div class="fm-wrap fm-grid2" style="max-width:920px; margin:44px auto 0; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:32px;">
-
-  <div>
-    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Prochains cours</h2>
-
-    <div style="display:flex; align-items:center; gap:16px; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-left:3px solid var(--acc,#b3763b); border-radius:10px; padding:16px 18px; margin-bottom:12px; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="text-align:center; min-width:46px;"><div style="font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">14</div><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">JUIL</div></div>
-      <div style="flex:1;"><div style="font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">Cours d'harmonie</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">19h00 · Salle 207</div></div>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:16px; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-left:3px solid var(--acc,#b3763b); border-radius:10px; padding:16px 18px; margin-bottom:12px; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="text-align:center; min-width:46px;"><div style="font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">18</div><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">JUIL</div></div>
-      <div style="flex:1;"><div style="font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">Atelier rythmique</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">18h30 · Grand studio</div></div>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:16px; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-left:3px solid var(--acc,#b3763b); border-radius:10px; padding:16px 18px; transition:background-color .5s ease,border-color .5s ease;">
-      <div style="text-align:center; min-width:46px;"><div style="font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">25</div><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">JUIL</div></div>
-      <div style="flex:1;"><div style="font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">Audition d'instrument</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">17h00 · Auditorium</div></div>
-    </div>
+<!-- APPLIS MUSICALES -->
+<div class="fm-wrap" style="max-width:920px; margin:44px auto 0; padding:0 40px;">
+  <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Les applis musicales</h2>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:var(--acc,#b3763b); transition:color .5s ease;">POUR JOUER &amp; S'ENTRAÎNER</div>
   </div>
+  <div class="fm-grid3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
 
-  <div>
-    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0 0 20px; transition:color .5s ease;">Cours &amp; partitions</h2>
+    <a class="fm-card" data-app="jam" href="/jam-maker-plus/?theme=clair" target="_blank" rel="noopener">
+      <div style="height:46px; width:46px; border-radius:10px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Jam Maker+</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Monter un morceau à plusieurs : qui joue quoi, les répétitions, la playlist du concert. Idéal pour organiser un groupe.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir l'app →</div>
+    </a>
 
-    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
-      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Solfège · Chapitre 12.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">2.4 Mo · PDF</div></div>
-    </div>
+    <a class="fm-card" data-app="lead" href="/leadsheetproject/?theme=clair" target="_blank" rel="noopener">
+      <div style="height:46px; width:46px; border-radius:10px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Lead Sheet</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Vos grilles d'accords et partitions simplifiées, faciles à lire sur téléphone comme à imprimer pour le pupitre.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir l'app →</div>
+    </a>
 
-    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; margin-bottom:12px; transition:border-color .5s ease;">
-      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Dictées mélodiques · série 4.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">1.1 Mo · PDF</div></div>
-    </div>
+    <a class="fm-card" data-app="magic" href="/magic-drums/?theme=clair" target="_blank" rel="noopener">
+      <div style="height:46px; width:46px; border-radius:10px; background:repeating-linear-gradient(45deg,var(--chipA,#e3d3ba),var(--chipA,#e3d3ba) 6px,var(--chipB,#d8c5a8) 6px,var(--chipB,#d8c5a8) 12px); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px;"></div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Magic Drums</div>
+      <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Djembé et dununs en partition interactive : écoutez chaque rythme, ralentissez-le, apprenez pas à pas.</div>
+      <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir l'app →</div>
+    </a>
 
-    <div style="display:flex; align-items:center; gap:14px; padding:15px 18px; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; transition:border-color .5s ease;">
-      <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--acc,#b3763b); transition:color .5s ease;">⤓</div>
-      <div style="flex:1;"><div style="font-size:14px; color:var(--ink,#2a221b); transition:color .5s ease;">Grille — standards jazz.pdf</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub,#6b5d4c);">840 Ko · PDF</div></div>
-    </div>
   </div>
-
+  <p style="font-size:12.5px; color:var(--sub,#6b5d4c); margin:18px 0 0; line-height:1.6;">Les applis s'ouvrent dans un nouvel onglet, déjà réglées à votre thème. Fermez l'onglet pour revenir ici.</p>
 </div>
+
 </div>
 
 <script src="fm/theme.js"></script>
