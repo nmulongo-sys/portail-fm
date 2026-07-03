@@ -128,10 +128,13 @@
       var fiches = await window.fmSync.list('journal_fiches');
       var items = await window.fmSync.list('journal_items');
       var bySid = {}; state.fiches.forEach(function (f) { if (f.sid) bySid[f.sid] = f; });
+      function nk(d, t) { return String(d || '') + '|' + String(t || '').trim().toLowerCase(); }
       (fiches || []).forEach(function (rf) {
         var f = bySid[rf.id];
+        // CORRECTIF doublons : à défaut de sid, rattacher par (date, titre) identiques
+        if (!f) f = state.fiches.filter(function (x) { return !x.sid && nk(x.date, x.titre) === nk(rf.date, rf.titre); })[0];
         if (!f) { f = { id: ++uid, sid: rf.id, date: rf.date, titre: rf.titre, resume: rf.resume, auteur: 'la classe', devoirs: [], annonces: [], liens: [] }; state.fiches.push(f); bySid[rf.id] = f; }
-        else { f.date = rf.date; f.titre = rf.titre; f.resume = rf.resume; }
+        else { f.sid = rf.id; f.date = rf.date; f.titre = rf.titre; f.resume = rf.resume; bySid[rf.id] = f; }
       });
       var localItem = {};
       state.fiches.forEach(function (f) { (f.devoirs || []).concat(f.annonces || [], f.liens || []).forEach(function (it) { if (it.sid) localItem[it.sid] = it; }); });
@@ -175,13 +178,18 @@
   function writeJournal() {
     try { localStorage.setItem('fm-journal', JSON.stringify({ fiches: state.fiches })); } catch (e) {}
   }
-  function persistJournal() { writeJournal(); pushJournal(); }
-  // Épinglage : fusion dans fm-perso sans écraser les autres clés
+  // CORRECTIF doublons : pushJournal attribue des sid -> on ré-écrit le journal
+  // après le push pour que ces sid survivent au rechargement de la page.
+  function persistJournal() { writeJournal(); pushJournal(); writeJournal(); }
+  // Épinglage : fusion dans fm-perso sans écraser les autres clés,
+  // sans doublon si l'objectif (même texte) existe déjà.
   function pinToObjectifs(texte) {
     var perso = {};
     try { var raw = localStorage.getItem('fm-perso'); if (raw) perso = JSON.parse(raw) || {}; } catch (e) {}
     if (!Array.isArray(perso.objectifs)) perso.objectifs = [];
-    perso.objectifs.push({ id: Date.now(), texte: texte, statut: 'a_travailler' });
+    var k = String(texte || '').trim().toLowerCase();
+    var deja = perso.objectifs.some(function (o) { return String(o.texte || '').trim().toLowerCase() === k; });
+    if (!deja) perso.objectifs.push({ id: Date.now(), texte: texte, statut: 'a_travailler' });
     try { localStorage.setItem('fm-perso', JSON.stringify(perso)); } catch (e) {}
   }
 

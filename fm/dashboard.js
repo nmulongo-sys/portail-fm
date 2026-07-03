@@ -25,6 +25,8 @@
       { id: 13, jour: '19', mois: 'SEPT', titre: "Cours d'instrument", detail: 'Sur rendez-vous' }
     ],
     pseudo: '',
+    // Phase 3 : invitations répét/jam (annuaire)
+    invAccept: [], invAttente: 0,
     // UI
     addObj: false, addOutil: false, addRep: false, editName: false,
     addMode: 'git', ghChoice: ''
@@ -43,36 +45,89 @@
     });
   }
   function syncOn() { return !!(window.FM_CONFIG && window.fmSync); }
+  // Écrit fm-perso SANS re-pousser (persiste les sid attribués au moment du push)
+  function rawPersist() {
+    try {
+      localStorage.setItem('fm-perso', JSON.stringify({
+        objectifs: state.objectifs, outils: state.outils, rdvs: state.rdvs
+      }));
+    } catch (e) {}
+  }
   function pushPerso() {
     if (!syncOn()) return;
     try {
-      state.objectifs.forEach(function (o) { if (!o.sid) o.sid = fmUuid(); window.fmSync.save('objectifs', { id: o.sid, texte: o.texte, statut: o.statut }); });
-      state.outils.forEach(function (u) { if (!u.sid) u.sid = fmUuid(); window.fmSync.save('outils_perso', { id: u.sid, nom: u.nom, url: u.url, desc: u.desc }); });
-      state.rdvs.forEach(function (r) { if (!r.sid) r.sid = fmUuid(); window.fmSync.save('rendez_vous', { id: r.sid, jour: r.jour, mois: r.mois, titre: r.titre, detail: r.detail }); });
+      var assigned = false;
+      state.objectifs.forEach(function (o) { if (!o.sid) { o.sid = fmUuid(); assigned = true; } window.fmSync.save('objectifs', { id: o.sid, texte: o.texte, statut: o.statut }); });
+      state.outils.forEach(function (u) { if (!u.sid) { u.sid = fmUuid(); assigned = true; } window.fmSync.save('outils_perso', { id: u.sid, nom: u.nom, url: u.url, desc: u.desc }); });
+      state.rdvs.forEach(function (r) { if (!r.sid) { r.sid = fmUuid(); assigned = true; } window.fmSync.save('rendez_vous', { id: r.sid, jour: r.jour, mois: r.mois, titre: r.titre, detail: r.detail }); });
+      // CORRECTIF doublons : un sid fraîchement attribué doit être persisté tout de
+      // suite, sinon au prochain chargement la ligne distante est re-rattachée
+      // comme nouvelle (c'était la cause des objectifs en double).
+      if (assigned) rawPersist();
     } catch (e) {}
   }
-  function mergeRemote(localArr, remoteArr, mapFn) {
+  function normKey(s) { return String(s == null ? '' : s).trim().toLowerCase(); }
+  function mergeRemote(localArr, remoteArr, mapFn, keyFn) {
     var bySid = {}; localArr.forEach(function (x) { if (x.sid) bySid[x.sid] = x; });
     (remoteArr || []).forEach(function (rem) {
       var ex = bySid[rem.id];
-      if (ex) { var m = mapFn(rem); for (var k in m) ex[k] = m[k]; ex.sid = rem.id; }
+      // CORRECTIF doublons : à défaut de sid, rattacher par contenu identique
+      if (!ex && keyFn) {
+        var rk = normKey(keyFn(mapFn(rem)));
+        if (rk) ex = localArr.filter(function (x) { return !x.sid && normKey(keyFn(x)) === rk; })[0];
+      }
+      if (ex) { var m = mapFn(rem); for (var k in m) ex[k] = m[k]; ex.sid = rem.id; bySid[rem.id] = ex; }
       else { var row = mapFn(rem); row.id = ++uid; row.sid = rem.id; localArr.push(row); bySid[rem.id] = row; }
     });
     return localArr;
+  }
+  // Doublons résiduels (même contenu) : on garde une seule ligne (priorité à
+  // celle qui a un sid) et on supprime les autres localement ET côté distant.
+  function dedupe(localArr, keyFn, table) {
+    var seen = {}, drop = [];
+    localArr.slice().sort(function (a, b) { return (a.sid ? 0 : 1) - (b.sid ? 0 : 1); }).forEach(function (x) {
+      var k = normKey(keyFn(x));
+      if (!k) return;
+      if (!seen[k]) seen[k] = x;
+      else drop.push(x);
+    });
+    drop.forEach(function (x) {
+      if (x.sid && window.fmSync) { try { window.fmSync.remove(table, x.sid); } catch (e) {} }
+    });
+    return localArr.filter(function (x) { return drop.indexOf(x) === -1; });
   }
   async function pullPerso() {
     if (!syncOn()) return;
     try {
       await window.fmSync.ready;
+      await pullInvitations();
+      renderRdvs(); renderNext();
       if (!window.fmSync.isConnected || !window.fmSync.isConnected()) return;
       var o = await window.fmSync.list('objectifs');
       var u = await window.fmSync.list('outils_perso');
       var r = await window.fmSync.list('rendez_vous');
-      mergeRemote(state.objectifs, o, function (x) { return { texte: x.texte, statut: x.statut }; });
-      mergeRemote(state.outils, u, function (x) { return { nom: x.nom, url: x.url, desc: x.desc }; });
-      mergeRemote(state.rdvs, r, function (x) { return { jour: x.jour, mois: x.mois, titre: x.titre, detail: x.detail }; });
+      var kObj = function (x) { return x.texte; };
+      var kOut = function (x) { return (x.nom || '') + '|' + (x.url || ''); };
+      var kRdv = function (x) { return (x.titre || '') + '|' + (x.jour || '') + '|' + (x.mois || ''); };
+      mergeRemote(state.objectifs, o, function (x) { return { texte: x.texte, statut: x.statut }; }, kObj);
+      mergeRemote(state.outils, u, function (x) { return { nom: x.nom, url: x.url, desc: x.desc }; }, kOut);
+      mergeRemote(state.rdvs, r, function (x) { return { jour: x.jour, mois: x.mois, titre: x.titre, detail: x.detail }; }, kRdv);
+      state.objectifs = dedupe(state.objectifs, kObj, 'objectifs');
+      state.outils = dedupe(state.outils, kOut, 'outils_perso');
+      state.rdvs = dedupe(state.rdvs, kRdv, 'rendez_vous');
       persistPerso();
       renderObjectifs(); renderOutils(); renderRdvs(); renderNext();
+    } catch (e) {}
+  }
+  // ---- Invitations (Phase 3) : une invitation acceptée apparaît ici,
+  //      chez le destinataire comme chez l'expéditeur. ----
+  async function pullInvitations() {
+    if (!window.fmSync) return;
+    try {
+      var all = await window.fmSync.list('invitations');
+      state.invAccept = (all || []).filter(function (i) { return i.statut === 'acceptee'; });
+      var me = (window.fmSync.user && window.fmSync.user()) ? window.fmSync.user().id : null;
+      state.invAttente = (all || []).filter(function (i) { return i.statut === 'proposee' && (!me || i.de !== me); }).length;
     } catch (e) {}
   }
 
@@ -164,11 +219,20 @@
     }
   }
 
-  // ---- Rendu : prochain rendez-vous ----
+  // ---- Rendu : prochain rendez-vous (invitation acceptée prioritaire) ----
   function renderNext() {
+    var inv = (state.invAccept || [])[0];
     var n = state.rdvs[0];
-    el('nextTitre').textContent = n ? n.titre : 'Aucun rendez-vous';
-    el('nextDetail').textContent = n ? n.detail : 'Proposez une répétition ci-dessous';
+    if (n) {
+      el('nextTitre').textContent = n.titre;
+      el('nextDetail').textContent = n.detail;
+    } else if (inv) {
+      el('nextTitre').textContent = inv.titre;
+      el('nextDetail').textContent = [inv.detail, inv.type === 'jam' ? 'Jam' : 'Répétition'].filter(Boolean).join(' · ');
+    } else {
+      el('nextTitre').textContent = 'Aucun rendez-vous';
+      el('nextDetail').textContent = 'Proposez une répétition ci-dessous';
+    }
   }
 
   // ---- Rendu : bandeau progression (calculé depuis les objectifs) ----
@@ -382,7 +446,20 @@
     }
 
     var list = el('rdvList');
-    list.innerHTML = state.rdvs.map(function (r) {
+    // Phase 3 : invitations en attente (lien) + invitations acceptées (lecture seule)
+    var invHtml = '';
+    if (state.invAttente) {
+      invHtml += '<a href="annuaire.html" style="display:block; text-decoration:none; font-family:\'Work Sans\',sans-serif; font-size:13px; color:var(--acc,#b3763b); background:var(--panel2,#f0e7d6); border:1px dashed var(--acc,#b3763b); border-radius:10px; padding:12px 16px; margin-bottom:12px;">✉ ' + state.invAttente + ' invitation' + (state.invAttente > 1 ? 's' : '') + ' en attente de réponse — ouvrir l\'Annuaire</a>';
+    }
+    invHtml += (state.invAccept || []).map(function (i) {
+      var typeLbl = i.type === 'jam' ? 'JAM' : 'RÉPÉT';
+      return '<div style="position:relative; display:flex; align-items:center; gap:16px; background:var(--panel,#f7f1e6); border:1px solid var(--acc,#b3763b); border-left:3px solid var(--acc,#b3763b); border-radius:10px; padding:16px 18px; margin-bottom:12px; transition:background-color .5s ease,border-color .5s ease;">' +
+        '<div style="text-align:center; min-width:46px;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">' + esc(i.jour || '—') + '</div><div style="font-family:\'JetBrains Mono\',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">' + esc(i.mois || '') + '</div></div>' +
+        '<div style="flex:1;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">' + esc(i.titre) + '</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc([i.detail, i.de_nom ? 'avec ' + i.de_nom : null].filter(Boolean).join(' · ')) + '</div></div>' +
+        '<span style="font-family:\'JetBrains Mono\',monospace; font-size:9px; letter-spacing:.14em; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); border-radius:999px; padding:5px 10px; flex:none;">' + typeLbl + ' ✓</span>' +
+        '</div>';
+    }).join('');
+    list.innerHTML = invHtml + state.rdvs.map(function (r) {
       return '<div style="position:relative; display:flex; align-items:center; gap:16px; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-left:3px solid var(--acc,#b3763b); border-radius:10px; padding:16px 18px; margin-bottom:12px; transition:background-color .5s ease,border-color .5s ease;">' +
         '<div style="text-align:center; min-width:46px;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">' + esc(r.jour) + '</div><div style="font-family:\'JetBrains Mono\',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">' + esc(r.mois) + '</div></div>' +
         '<div style="flex:1;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">' + esc(r.titre) + '</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(r.detail) + '</div></div>' +
@@ -411,6 +488,11 @@
     renderOutils();
     renderRdvs();
     pullPerso();
+    // Sans FM_CONFIG, pullPerso est un no-op : on lit quand même le miroir
+    // local des invitations pour rester cohérent avec l'annuaire.
+    if (!syncOn() && window.fmSync) {
+      pullInvitations().then(function () { renderRdvs(); renderNext(); });
+    }
     if (window.fmSync && window.fmSync.onChange) window.fmSync.onChange(function () { pullPerso(); });
   }
   if (document.readyState === 'loading') {
