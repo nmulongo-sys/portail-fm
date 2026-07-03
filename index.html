@@ -16,6 +16,13 @@
   .fm-card { display: block; text-decoration: none; background: var(--panel,#f7f1e6); border: 1px solid var(--line,rgba(107,74,46,.16)); border-radius: 14px; padding: 26px; transition: background-color .5s ease, border-color .25s ease, transform .18s ease, box-shadow .18s ease; }
   .fm-card:hover { transform: translateY(-3px); border-color: var(--acc,#b3763b); box-shadow: 0 10px 26px rgba(107,74,46,.14); }
   .fm-card:hover .fm-card-go { background: var(--acc2,#6b4a2e); }
+  /* Boutons d'aide du hero : visite guidée + mode simple */
+  .fm-hero-btn { font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; letter-spacing:.02em; border-radius:999px; padding:11px 20px; cursor:pointer; transition:background-color .25s ease, color .25s ease, border-color .25s ease, transform .15s ease; }
+  .fm-hero-btn:hover { transform: translateY(-2px); }
+  .fm-hero-btn-prim { background: var(--acc,#b3763b); color: var(--accInk,#f7f1e6); border: 1px solid var(--acc,#b3763b); }
+  .fm-hero-btn-prim:hover { background: var(--acc2,#6b4a2e); border-color: var(--acc2,#6b4a2e); }
+  .fm-hero-btn-sec { background: var(--panel,#f7f1e6); color: var(--ink,#2a221b); border: 1px solid var(--line,rgba(107,74,46,.16)); }
+  .fm-hero-btn-sec:hover { border-color: var(--acc,#b3763b); }
 </style>
 </head>
 <body>
@@ -31,13 +38,13 @@
       <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em; color:var(--acc,#b3763b); transition:color .5s ease;">ADULTES · PROMOTION 2023</div>
     </div>
   </div>
-  <div class="fm-nav" style="display:flex; align-items:center; gap:8px;">
+  <div class="fm-nav" data-tuto="nav" style="display:flex; align-items:center; gap:8px;">
     <div style="font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); padding:9px 15px; border-radius:999px; transition:background-color .5s ease,color .5s ease;">Accueil</div>
     <a href="tableau-de-bord.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Tableau de bord</a>
     <a href="journal-de-classe.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Journal de classe</a>
     <a href="annuaire.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Annuaire</a>
     <a href="gestion.html" style="text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; color:var(--sub,#6b5d4c); padding:9px 14px; border-radius:999px; transition:color .5s ease;">Gestion</a>
-    <button id="themeToggle" onclick="toggleTheme()" style="display:flex; align-items:center; gap:9px; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; letter-spacing:.02em; color:var(--ink,#2a221b); background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:10px 18px; cursor:pointer; transition:background-color .5s ease,color .5s ease,border-color .5s ease;">☾&emsp;Mode sombre</button>
+    <button id="themeToggle" data-tuto="theme" onclick="toggleTheme()" style="display:flex; align-items:center; gap:9px; font-family:'Work Sans',sans-serif; font-weight:500; font-size:13px; letter-spacing:.02em; color:var(--ink,#2a221b); background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:10px 18px; cursor:pointer; transition:background-color .5s ease,color .5s ease,border-color .5s ease;">☾&emsp;Mode sombre</button>
   </div>
 </div>
 
@@ -49,6 +56,10 @@
       <div style="display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.24em; color:var(--acc,#b3763b); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:999px; padding:5px 13px; transition:color .5s ease,border-color .5s ease;">ESPACE DE CLASSE · 4ᵉ ANNÉE</div>
       <h1 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:44px; line-height:1.05; color:var(--ink,#2a221b); margin:20px 0 12px; letter-spacing:-0.01em; transition:color .5s ease;">Bienvenue. Par où<br>voulez-vous commencer&nbsp;?</h1>
       <p style="font-size:16px; line-height:1.7; color:var(--sub,#6b5d4c); max-width:520px; margin:0; transition:color .5s ease;">Cliquez simplement sur une carte ci-dessous : chaque page vous explique le reste. Impossible de casser quoi que ce soit — explorez tranquillement.</p>
+      <div class="fm-hero-actions" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;">
+        <button id="tutoVisite" class="fm-hero-btn fm-hero-btn-prim" title="Découvrir la page zone par zone">▶&ensp;Visite guidée</button>
+        <button id="tutoModeSimple" data-tuto="mode-simple" class="fm-hero-btn fm-hero-btn-sec" title="Mode simple pour les novices, étape par étape">✔&ensp;Que voulez-vous réaliser&nbsp;?</button>
+      </div>
     </div>
   </div>
 </div>
@@ -61,28 +72,28 @@
   </div>
   <div class="fm-grid2" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
-    <a class="fm-card" href="tableau-de-bord.html">
+    <a class="fm-card" data-tuto="carte-tdb" href="tableau-de-bord.html">
       <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">♪</div>
       <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Tableau de bord</div>
       <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Votre page à vous : vos objectifs de travail, votre progression en un coup d'œil et vos prochains rendez-vous. C'est ici que tout commence.</div>
       <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
     </a>
 
-    <a class="fm-card" href="journal-de-classe.html">
+    <a class="fm-card" data-tuto="carte-journal" href="journal-de-classe.html">
       <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">✎</div>
       <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Journal de classe</div>
       <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Ce qu'on a vu à chaque cours, les devoirs et les documents partagés. Écrit par la classe, pour la classe — parfait si vous avez raté une séance.</div>
       <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
     </a>
 
-    <a class="fm-card" href="annuaire.html">
+    <a class="fm-card" data-tuto="carte-annuaire" href="annuaire.html">
       <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">✉</div>
       <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Annuaire</div>
       <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">Les personnes qui nous entourent : la classe et les amis percussionnistes. Proposez une répétition ou une jam, répondez aux invitations, discutez en groupe.</div>
       <div class="fm-card-go" style="font-family:'Work Sans',sans-serif; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--accInk,#f7f1e6); background:var(--acc,#b3763b); text-align:center; padding:11px; border-radius:8px; transition:background-color .3s ease;">Ouvrir →</div>
     </a>
 
-    <a class="fm-card" href="gestion.html">
+    <a class="fm-card" data-tuto="carte-gestion" href="gestion.html">
       <div style="height:46px; width:46px; border-radius:10px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:'Cormorant Garamond',serif; font-size:24px;">≡</div>
       <div style="font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--ink,#2a221b); line-height:1; transition:color .5s ease;">Gestion</div>
       <div style="font-size:13.5px; color:var(--sub,#6b5d4c); margin:10px 0 18px; line-height:1.6; transition:color .5s ease;">La vue d'ensemble : qui est inscrit, où en sont les invitations et les messages. Surtout utile pour l'organisation — les curieux sont les bienvenus.</div>
@@ -93,7 +104,7 @@
 </div>
 
 <!-- APPLIS MUSICALES -->
-<div class="fm-wrap" style="max-width:920px; margin:44px auto 0; padding:0 40px;">
+<div class="fm-wrap" data-tuto="applis" style="max-width:920px; margin:44px auto 0; padding:0 40px;">
   <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
     <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:28px; color:var(--ink,#2a221b); margin:0; transition:color .5s ease;">Les applis musicales</h2>
     <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; color:var(--acc,#b3763b); transition:color .5s ease;">POUR JOUER &amp; S'ENTRAÎNER</div>
@@ -130,5 +141,6 @@
 <script src="fm/theme.js"></script>
 <script src="fm/fm-config.js"></script>
 <script src="fm/fm-sync.js"></script>
+<script src="fm/tutoriel.js"></script>
 </body>
 </html>
