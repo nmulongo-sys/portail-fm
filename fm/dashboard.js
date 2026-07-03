@@ -5,6 +5,8 @@
      fm-perso = {objectifs:[{id,texte,statut}],
                  outils:[{id,nom,desc,url}],
                  rdvs:[{id,jour,mois,titre,detail}]}
+   Synchro Supabase optionnelle via fm-sync (hors-ligne d'abord :
+   sans FM_CONFIG, aucun changement de comportement).
    ============================================================= */
 (function () {
   'use strict';
@@ -28,6 +30,51 @@
     addMode: 'git', ghChoice: ''
   };
   var uid = 100;
+
+  // ============================================================
+  // Synchro Supabase (overlay non intrusif via fm-sync)
+  //   - clé « sid » = identifiant uuid distant, à côté de l'id local (int).
+  //   - sans FM_CONFIG : no-op total (aucun accès, aucun mirror).
+  // ============================================================
+  function fmUuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16);
+    });
+  }
+  function syncOn() { return !!(window.FM_CONFIG && window.fmSync); }
+  function pushPerso() {
+    if (!syncOn()) return;
+    try {
+      state.objectifs.forEach(function (o) { if (!o.sid) o.sid = fmUuid(); window.fmSync.save('objectifs', { id: o.sid, texte: o.texte, statut: o.statut }); });
+      state.outils.forEach(function (u) { if (!u.sid) u.sid = fmUuid(); window.fmSync.save('outils_perso', { id: u.sid, nom: u.nom, url: u.url, desc: u.desc }); });
+      state.rdvs.forEach(function (r) { if (!r.sid) r.sid = fmUuid(); window.fmSync.save('rendez_vous', { id: r.sid, jour: r.jour, mois: r.mois, titre: r.titre, detail: r.detail }); });
+    } catch (e) {}
+  }
+  function mergeRemote(localArr, remoteArr, mapFn) {
+    var bySid = {}; localArr.forEach(function (x) { if (x.sid) bySid[x.sid] = x; });
+    (remoteArr || []).forEach(function (rem) {
+      var ex = bySid[rem.id];
+      if (ex) { var m = mapFn(rem); for (var k in m) ex[k] = m[k]; ex.sid = rem.id; }
+      else { var row = mapFn(rem); row.id = ++uid; row.sid = rem.id; localArr.push(row); bySid[rem.id] = row; }
+    });
+    return localArr;
+  }
+  async function pullPerso() {
+    if (!syncOn()) return;
+    try {
+      await window.fmSync.ready;
+      if (!window.fmSync.isConnected || !window.fmSync.isConnected()) return;
+      var o = await window.fmSync.list('objectifs');
+      var u = await window.fmSync.list('outils_perso');
+      var r = await window.fmSync.list('rendez_vous');
+      mergeRemote(state.objectifs, o, function (x) { return { texte: x.texte, statut: x.statut }; });
+      mergeRemote(state.outils, u, function (x) { return { nom: x.nom, url: x.url, desc: x.desc }; });
+      mergeRemote(state.rdvs, r, function (x) { return { jour: x.jour, mois: x.mois, titre: x.titre, detail: x.detail }; });
+      persistPerso();
+      renderObjectifs(); renderOutils(); renderRdvs(); renderNext();
+    } catch (e) {}
+  }
 
   var GH_CATALOG = [
     { key: 'auberge', nom: 'Auberge espagnole', desc: 'Pique-nique de classe', url: '/auberge-espagnole/', needsUrl: false },
@@ -59,6 +106,7 @@
         objectifs: state.objectifs, outils: state.outils, rdvs: state.rdvs
       }));
     } catch (e) {}
+    pushPerso();
   }
   function persistEleve() {
     try { localStorage.setItem('fm-eleve', JSON.stringify({ pseudo: state.pseudo })); } catch (e) {}
@@ -79,9 +127,9 @@
   var BTN_GHOST = "font-family:'Work Sans',sans-serif; font-size:13px; color:var(--sub,#6b5d4c); background:transparent; border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:9px; cursor:pointer;";
 
   var STATUT = {
-    a_travailler: { label: 'À travailler', bg: 'transparent',        col: 'var(--sub,#6b5d4c)',  bd: 'var(--line,rgba(107,74,46,.16))' },
-    en_cours:     { label: 'En cours',     bg: 'var(--panel2,#f0e7d6)', col: 'var(--acc,#b3763b)', bd: 'var(--acc,#b3763b)' },
-    maitrise:     { label: 'Maîtrisé',     bg: 'var(--acc,#b3763b)',   col: 'var(--accInk,#f7f1e6)', bd: 'var(--acc,#b3763b)' }
+    a_travailler: { label: 'À travailler', bg: 'transparent', col: 'var(--sub,#6b5d4c)', bd: 'var(--line,rgba(107,74,46,.16))' },
+    en_cours: { label: 'En cours', bg: 'var(--panel2,#f0e7d6)', col: 'var(--acc,#b3763b)', bd: 'var(--acc,#b3763b)' },
+    maitrise: { label: 'Maîtrisé', bg: 'var(--acc,#b3763b)', col: 'var(--accInk,#f7f1e6)', bd: 'var(--acc,#b3763b)' }
   };
   var PILL = "font-family:'Work Sans',sans-serif; font-weight:500; font-size:12px; letter-spacing:.04em; padding:6px 14px; border-radius:999px; cursor:pointer; white-space:nowrap; flex:none; transition:all .3s ease;";
 
@@ -98,8 +146,8 @@
     if (showForm) {
       slot.innerHTML =
         '<div style="display:flex; gap:10px; max-width:380px;">' +
-          '<input id="pseudoInput" placeholder="Votre prénom" style="flex:1; min-width:0; ' + INP + '">' +
-          '<button id="pseudoSave" style="' + BTN_PRIM + ' padding:0 20px;">C\'est moi</button>' +
+        '<input id="pseudoInput" placeholder="Votre prénom" style="flex:1; min-width:0; ' + INP + '">' +
+        '<button id="pseudoSave" style="' + BTN_PRIM + ' padding:0 20px;">C\'est moi</button>' +
         '</div>';
       var inp = el('pseudoInput');
       inp.value = state.pseudo || '';
@@ -142,17 +190,17 @@
 
     box.innerHTML =
       '<div style="display:flex; align-items:center; gap:28px;">' +
-        '<div style="flex:1; min-width:0;">' +
-          '<div style="font-family:\'JetBrains Mono\',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">Mes objectifs · Progression</div>' +
-          '<div style="height:6px; border-radius:999px; background:var(--line,rgba(107,74,46,.16)); overflow:hidden; margin-top:16px;">' +
-            '<div style="width:' + pct + '; height:100%; background:linear-gradient(90deg, var(--acc2,#6b4a2e), var(--acc,#b3763b)); border-radius:999px; transition:width .6s ease;"></div>' +
-          '</div>' +
-          '<div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:10px;">' +
-            '<span style="font-family:\'Work Sans\',sans-serif; font-size:13px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(left) + '</span>' +
-            '<span style="font-family:\'Work Sans\',sans-serif; font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(right) + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div style="font-family:\'Cormorant Garamond\',serif; font-size:42px; color:var(--acc,#b3763b); line-height:1; flex:none; transition:color .5s ease;">' + esc(ratio) + '</div>' +
+      '<div style="flex:1; min-width:0;">' +
+      '<div style="font-family:\'JetBrains Mono\',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">Mes objectifs · Progression</div>' +
+      '<div style="height:6px; border-radius:999px; background:var(--line,rgba(107,74,46,.16)); overflow:hidden; margin-top:16px;">' +
+      '<div style="width:' + pct + '; height:100%; background:linear-gradient(90deg, var(--acc2,#6b4a2e), var(--acc,#b3763b)); border-radius:999px; transition:width .6s ease;"></div>' +
+      '</div>' +
+      '<div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:10px;">' +
+      '<span style="font-family:\'Work Sans\',sans-serif; font-size:13px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(left) + '</span>' +
+      '<span style="font-family:\'Work Sans\',sans-serif; font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(right) + '</span>' +
+      '</div>' +
+      '</div>' +
+      '<div style="font-family:\'Cormorant Garamond\',serif; font-size:42px; color:var(--acc,#b3763b); line-height:1; flex:none; transition:color .5s ease;">' + esc(ratio) + '</div>' +
       '</div>';
   }
 
@@ -162,9 +210,9 @@
     if (state.addObj) {
       form.innerHTML =
         '<div style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;">' +
-          '<input id="objTexte" placeholder="Nouvel objectif (ex : arpèges mineurs)" style="flex:1; min-width:220px; ' + INP + '">' +
-          '<button id="objAdd" style="' + BTN_PRIM + ' padding:0 22px;">Ajouter</button>' +
-          '<button id="objCancel" style="' + BTN_GHOST + ' padding:0 18px;">Annuler</button>' +
+        '<input id="objTexte" placeholder="Nouvel objectif (ex : arpèges mineurs)" style="flex:1; min-width:220px; ' + INP + '">' +
+        '<button id="objAdd" style="' + BTN_PRIM + ' padding:0 22px;">Ajouter</button>' +
+        '<button id="objCancel" style="' + BTN_GHOST + ' padding:0 18px;">Annuler</button>' +
         '</div>';
       el('objAdd').onclick = function () {
         var t = val('objTexte').trim(); if (!t) return;
@@ -187,22 +235,22 @@
         '<div style="flex:1; font-family:\'Cormorant Garamond\',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">' + esc(o.texte) + '</div>' +
         '<button data-cycle="' + o.id + '" style="' + pill + '">' + m.label + '</button>' +
         '<button data-robj="' + o.id + '" title="Retirer" style="width:26px; height:26px; border-radius:50%; border:1px solid var(--line,rgba(107,74,46,.16)); background:transparent; color:var(--sub,#6b5d4c); cursor:pointer; font-size:14px; line-height:1; flex:none;">×</button>' +
-      '</div>';
+        '</div>';
     }).join('');
     list.querySelectorAll('[data-cycle]').forEach(function (b) {
       b.onclick = function () {
-        var id = +b.getAttribute('data-cycle');
+        var id = b.getAttribute('data-cycle');
         var order = ['a_travailler', 'en_cours', 'maitrise'];
         state.objectifs = state.objectifs.map(function (o) {
-          return o.id === id ? Object.assign({}, o, { statut: order[(order.indexOf(o.statut) + 1) % 3] }) : o;
+          return String(o.id) === id ? Object.assign({}, o, { statut: order[(order.indexOf(o.statut) + 1) % 3] }) : o;
         });
         persistPerso(); renderObjectifs();
       };
     });
     list.querySelectorAll('[data-robj]').forEach(function (b) {
       b.onclick = function () {
-        var id = +b.getAttribute('data-robj');
-        state.objectifs = state.objectifs.filter(function (o) { return o.id !== id; });
+        var id = b.getAttribute('data-robj');
+        state.objectifs = state.objectifs.filter(function (o) { return String(o.id) !== id; });
         persistPerso(); renderObjectifs();
       };
     });
@@ -217,19 +265,18 @@
       return '<div style="position:relative; background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:12px; padding:22px; transition:background-color .5s ease,border-color .5s ease;">' +
         '<button data-rout="' + u.id + '" title="Retirer" style="position:absolute; top:12px; right:12px; width:24px; height:24px; border-radius:50%; border:1px solid var(--line,rgba(107,74,46,.16)); background:transparent; color:var(--sub,#6b5d4c); cursor:pointer; font-size:13px; line-height:1;">×</button>' +
         '<a href="' + esc(u.url || '#') + '" target="_blank" rel="noopener" style="text-decoration:none; display:block;">' +
-          '<div style="height:42px; width:42px; border-radius:9px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:\'Cormorant Garamond\',serif; font-size:22px;">♪</div>' +
-          '<div style="font-family:\'Cormorant Garamond\',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1;">' + esc(u.nom) + '</div>' +
-          '<div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5;">' + esc(u.desc) + '</div>' +
+        '<div style="height:42px; width:42px; border-radius:9px; background:var(--panel2,#f0e7d6); border:1px solid var(--line,rgba(107,74,46,.16)); margin-bottom:16px; display:flex; align-items:center; justify-content:center; color:var(--acc,#b3763b); font-family:\'Cormorant Garamond\',serif; font-size:22px;">♪</div>' +
+        '<div style="font-family:\'Cormorant Garamond\',serif; font-size:22px; color:var(--ink,#2a221b); line-height:1;">' + esc(u.nom) + '</div>' +
+        '<div style="font-size:13px; color:var(--sub,#6b5d4c); margin:8px 0 0; line-height:1.5;">' + esc(u.desc) + '</div>' +
         '</a>' +
-      '</div>';
+        '</div>';
     }).join('');
 
-    // tuile d'ajout
     html += '<div style="border-radius:12px; border:1px dashed var(--line,rgba(107,74,46,.3)); background:transparent; padding:20px; transition:border-color .5s ease;">';
     if (!state.addOutil) {
       html += '<button id="outilOpen" style="width:100%; height:100%; min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:transparent; border:none; cursor:pointer; color:var(--acc,#b3763b);">' +
-          '<div style="width:40px; height:40px; border-radius:50%; border:1px solid var(--acc,#b3763b); display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1;">＋</div>' +
-          '<div style="font-family:\'Work Sans\',sans-serif; font-weight:500; font-size:13px;">Ajouter un outil</div>' +
+        '<div style="width:40px; height:40px; border-radius:50%; border:1px solid var(--acc,#b3763b); display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1;">＋</div>' +
+        '<div style="font-family:\'Work Sans\',sans-serif; font-weight:500; font-size:13px;">Ajouter un outil</div>' +
         '</button>';
     } else {
       var gitOn = state.addMode !== 'url';
@@ -238,31 +285,31 @@
       var tabOff = tabBase + "background:transparent; color:var(--sub,#6b5d4c); border:1px solid var(--line,rgba(107,74,46,.16));";
       html += '<div style="display:flex; flex-direction:column; gap:10px;">' +
         '<div style="display:flex; gap:6px;">' +
-          '<button id="tabGit" style="' + (gitOn ? tabOn : tabOff) + '">Depuis GitHub</button>' +
-          '<button id="tabUrl" style="' + (gitOn ? tabOff : tabOn) + '">Avancé · URL</button>' +
+        '<button id="tabGit" style="' + (gitOn ? tabOn : tabOff) + '">Depuis GitHub</button>' +
+        '<button id="tabUrl" style="' + (gitOn ? tabOff : tabOn) + '">Avancé · URL</button>' +
         '</div>';
       if (gitOn) {
         var gcur = GH_CATALOG.filter(function (x) { return x.key === state.ghChoice; })[0];
         html += '<select id="ghSel" style="' + INP2 + '">' +
-            '<option value="">Choisir une app…</option>' +
-            GH_CATALOG.map(function (g) {
-              return '<option value="' + g.key + '"' + (g.key === state.ghChoice ? ' selected' : '') + '>' + esc(g.nom) + '</option>';
-            }).join('') +
+          '<option value="">Choisir une app…</option>' +
+          GH_CATALOG.map(function (g) {
+            return '<option value="' + g.key + '"' + (g.key === state.ghChoice ? ' selected' : '') + '>' + esc(g.nom) + '</option>';
+          }).join('') +
           '</select>';
         if (gcur && gcur.needsUrl) {
           html += '<input id="ghUrl" placeholder="Lien de déploiement (https://…)" style="' + INP2 + '">';
         }
         html += '<div style="display:flex; gap:8px;">' +
-            '<button id="ghAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Ajouter</button>' +
-            '<button id="ghCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
+          '<button id="ghAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Ajouter</button>' +
+          '<button id="ghCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
           '</div>';
       } else {
         html += '<input id="uNom" placeholder="Nom de l\'outil" style="' + INP2 + '">' +
           '<input id="uUrl" placeholder="Lien (https://…)" style="' + INP2 + '">' +
           '<input id="uDesc" placeholder="Description (optionnel)" style="' + INP2 + '">' +
           '<div style="display:flex; gap:8px;">' +
-            '<button id="uAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Ajouter</button>' +
-            '<button id="uCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
+          '<button id="uAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Ajouter</button>' +
+          '<button id="uCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
           '</div>';
       }
       html += '</div>';
@@ -271,12 +318,11 @@
 
     slot.innerHTML = html;
 
-    // handlers
     slot.querySelectorAll('[data-rout]').forEach(function (b) {
       b.onclick = function (e) {
         e.preventDefault();
-        var id = +b.getAttribute('data-rout');
-        state.outils = state.outils.filter(function (o) { return o.id !== id; });
+        var id = b.getAttribute('data-rout');
+        state.outils = state.outils.filter(function (o) { return String(o.id) !== id; });
         persistPerso(); renderOutils();
       };
     });
@@ -308,16 +354,16 @@
     if (state.addRep) {
       form.innerHTML =
         '<div style="background:var(--panel,#f7f1e6); border:1px solid var(--line,rgba(107,74,46,.16)); border-radius:10px; padding:16px; margin-bottom:12px; display:flex; flex-direction:column; gap:9px;">' +
-          '<input id="rTitre" value="Répétition" placeholder="Intitulé (ex : Répétition trio)" style="' + INP2 + '">' +
-          '<div style="display:flex; gap:9px;">' +
-            '<input id="rJour" placeholder="Jour (26)" style="width:80px; ' + INP2 + '">' +
-            '<input id="rMois" placeholder="Mois (SEPT)" style="width:110px; ' + INP2 + '">' +
-            '<input id="rLieu" placeholder="Heure & lieu" style="flex:1; ' + INP2 + '">' +
-          '</div>' +
-          '<div style="display:flex; gap:8px;">' +
-            '<button id="rAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Proposer</button>' +
-            '<button id="rCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
-          '</div>' +
+        '<input id="rTitre" value="Répétition" placeholder="Intitulé (ex : Répétition trio)" style="' + INP2 + '">' +
+        '<div style="display:flex; gap:9px;">' +
+        '<input id="rJour" placeholder="Jour (26)" style="width:80px; ' + INP2 + '">' +
+        '<input id="rMois" placeholder="Mois (SEPT)" style="width:110px; ' + INP2 + '">' +
+        '<input id="rLieu" placeholder="Heure & lieu" style="flex:1; ' + INP2 + '">' +
+        '</div>' +
+        '<div style="display:flex; gap:8px;">' +
+        '<button id="rAdd" style="flex:1; ' + BTN_PRIM.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px;">Proposer</button>' +
+        '<button id="rCancel" style="' + BTN_GHOST.replace('border-radius:9px', 'border-radius:8px') + ' padding:9px 14px;">Annuler</button>' +
+        '</div>' +
         '</div>';
       el('rAdd').onclick = function () {
         var t = val('rTitre').trim() || 'Répétition';
@@ -341,12 +387,12 @@
         '<div style="text-align:center; min-width:46px;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:26px; color:var(--acc,#b3763b); line-height:1; transition:color .5s ease;">' + esc(r.jour) + '</div><div style="font-family:\'JetBrains Mono\',monospace; font-size:9px; letter-spacing:.15em; color:var(--sub,#6b5d4c);">' + esc(r.mois) + '</div></div>' +
         '<div style="flex:1;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:19px; color:var(--ink,#2a221b); transition:color .5s ease;">' + esc(r.titre) + '</div><div style="font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(r.detail) + '</div></div>' +
         '<button data-rrdv="' + r.id + '" title="Retirer" style="width:24px; height:24px; border-radius:50%; border:1px solid var(--line,rgba(107,74,46,.16)); background:transparent; color:var(--sub,#6b5d4c); cursor:pointer; font-size:13px; line-height:1; flex:none;">×</button>' +
-      '</div>';
+        '</div>';
     }).join('');
     list.querySelectorAll('[data-rrdv]').forEach(function (b) {
       b.onclick = function () {
-        var id = +b.getAttribute('data-rrdv');
-        state.rdvs = state.rdvs.filter(function (r) { return r.id !== id; });
+        var id = b.getAttribute('data-rrdv');
+        state.rdvs = state.rdvs.filter(function (r) { return String(r.id) !== id; });
         persistPerso(); renderRdvs(); renderNext();
       };
     });
@@ -364,6 +410,8 @@
     renderObjectifs();
     renderOutils();
     renderRdvs();
+    pullPerso();
+    if (window.fmSync && window.fmSync.onChange) window.fmSync.onChange(function () { pullPerso(); });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);

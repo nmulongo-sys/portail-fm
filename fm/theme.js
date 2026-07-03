@@ -22,8 +22,8 @@
 
   // Chemins d'origine commune (GitHub Pages user site)
   var APP_BASE = {
-    jam:   '/jam-maker-plus/',
-    lead:  '/leadsheetproject/',
+    jam: '/jam-maker-plus/',
+    lead: '/leadsheetproject/',
     magic: '/magic-drums/'
   };
 
@@ -54,7 +54,7 @@
 
     var btn = document.getElementById('themeToggle');
     if (btn) {
-      btn.textContent = (current === 'sombre') ? '☀ Mode clair' : '☾ Mode sombre';
+      btn.textContent = (current === 'sombre') ? '☀ Mode clair' : '☾ Mode sombre';
     }
 
     // liens vers les apps : recalculés avec le thème courant
