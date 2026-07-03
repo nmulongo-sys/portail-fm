@@ -123,6 +123,39 @@
     el('nextDetail').textContent = n ? n.detail : 'Proposez une répétition ci-dessous';
   }
 
+  // ---- Rendu : bandeau progression (calculé depuis les objectifs) ----
+  function renderProgress() {
+    var box = el('progressBanner');
+    if (!box) return;
+    var objectifs = state.objectifs;
+    var tot = objectifs.length;
+    var ok = objectifs.filter(function (o) { return o.statut === 'maitrise'; }).length;
+    var cours = objectifs.filter(function (o) { return o.statut === 'en_cours'; }).length;
+    var trav = tot - ok - cours;
+    var pct = tot ? Math.round(ok / tot * 100) + '%' : '0%';
+
+    var left = tot
+      ? (ok + ' objectif' + (ok > 1 ? 's' : '') + ' maîtrisé' + (ok > 1 ? 's' : '') + ' sur ' + tot)
+      : 'Aucun objectif pour le moment';
+    var right = tot ? (cours + ' en cours · ' + trav + ' à travailler') : '';
+    var ratio = tot ? (ok + '/' + tot) : '—';
+
+    box.innerHTML =
+      '<div style="display:flex; align-items:center; gap:28px;">' +
+        '<div style="flex:1; min-width:0;">' +
+          '<div style="font-family:\'JetBrains Mono\',monospace; font-size:11px; letter-spacing:.22em; color:var(--acc,#b3763b); text-transform:uppercase; transition:color .5s ease;">Mes objectifs · Progression</div>' +
+          '<div style="height:6px; border-radius:999px; background:var(--line,rgba(107,74,46,.16)); overflow:hidden; margin-top:16px;">' +
+            '<div style="width:' + pct + '; height:100%; background:linear-gradient(90deg, var(--acc2,#6b4a2e), var(--acc,#b3763b)); border-radius:999px; transition:width .6s ease;"></div>' +
+          '</div>' +
+          '<div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:10px;">' +
+            '<span style="font-family:\'Work Sans\',sans-serif; font-size:13px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(left) + '</span>' +
+            '<span style="font-family:\'Work Sans\',sans-serif; font-size:12px; color:var(--sub,#6b5d4c); transition:color .5s ease;">' + esc(right) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-family:\'Cormorant Garamond\',serif; font-size:42px; color:var(--acc,#b3763b); line-height:1; flex:none; transition:color .5s ease;">' + esc(ratio) + '</div>' +
+      '</div>';
+  }
+
   // ---- Rendu : objectifs ----
   function renderObjectifs() {
     var form = el('objForm');
@@ -173,6 +206,7 @@
         persistPerso(); renderObjectifs();
       };
     });
+    renderProgress();
   }
 
   // ---- Rendu : outils (cartes ajoutées + tuile d'ajout) ----
