@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche de travail — Rhythm Guitar, chapitres 1 &amp; 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --creme:#F5EFE2;
+  --creme-fonce:#EAE0CC;
+  --encre:#33281D;
+  --encre-clair:#6B5B48;
+  --ocre:#B0801F;
+  --ocre-clair:#D9BE7A;
+  --brique:#93412B;
+  --trait:rgba(51,40,29,.16);
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --sans:"Work Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--creme);color:var(--encre);
+  font-family:var(--sans);font-weight:400;font-size:16px;line-height:1.55;
+}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+
+/* ---- en-tête ---- */
+header{border-bottom:2px solid var(--encre);padding-bottom:18px;margin-bottom:26px}
+.eyebrow{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--encre-clair);font-weight:500;margin:0 0 8px
+}
+h1{
+  font-family:var(--serif);font-weight:600;font-size:clamp(30px,7vw,44px);
+  line-height:1.06;margin:0 0 10px;letter-spacing:-.01em
+}
+h1 em{font-style:italic;color:var(--brique)}
+.chapeau{margin:0;color:var(--encre-clair);font-size:15px;max-width:52ch}
+
+/* ---- sections ---- */
+section{margin:38px 0 0}
+h2{
+  font-family:var(--serif);font-size:26px;font-weight:600;margin:0 0 4px;
+  display:flex;align-items:baseline;gap:10px
+}
+h2 .num{
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.12em;
+  color:var(--ocre);border:1px solid var(--ocre-clair);border-radius:2px;
+  padding:2px 6px;flex:none
+}
+.sous{color:var(--encre-clair);font-size:14px;margin:0 0 18px}
+
+/* ---- accords ---- */
+.lot{margin-bottom:16px}
+.lot-titre{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--encre-clair);font-weight:600;margin-bottom:8px
+}
+.accords{display:flex;flex-wrap:wrap;gap:6px}
+.ac{
+  font-family:var(--serif);font-size:19px;line-height:1;
+  padding:8px 11px;border:1px solid var(--trait);border-radius:3px;
+  background:#fff9ee
+}
+.ac.barre{background:var(--creme-fonce);border-color:var(--ocre-clair)}
+.ac.mobile{background:var(--encre);color:var(--creme);border-color:var(--encre)}
+
+/* ---- grille rythmique (élément signature) ---- */
+.rythme{
+  border:1px solid var(--trait);border-radius:4px;background:#fff9ee;
+  padding:14px 14px 12px;margin-bottom:14px
+}
+.rythme h3{
+  font-family:var(--sans);font-size:13px;font-weight:600;margin:0 0 2px;
+  letter-spacing:.02em
+}
+.rythme .r-note{font-size:13px;color:var(--encre-clair);margin:0 0 12px}
+.grille{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.cel{
+  aspect-ratio:1/1.15;border-radius:2px;display:flex;
+  align-items:center;justify-content:center;
+  font-size:clamp(13px,4vw,17px);font-weight:500;
+  background:var(--creme-fonce);color:var(--encre-clair)
+}
+.cel.temps{background:#e3d5b6}
+.cel.frappe{background:var(--encre);color:var(--creme)}
+.cel.frappe.acc{background:var(--brique)}
+.cel.mute{background:var(--creme-fonce);color:var(--ocre)}
+.compte{
+  display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-top:5px;
+  font-size:10px;letter-spacing:.04em;color:var(--encre-clair);text-align:center
+}
+
+/* ---- morceaux ---- */
+.filtres{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.filtres button{
+  font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.04em;
+  padding:7px 12px;border:1px solid var(--trait);border-radius:20px;
+  background:transparent;color:var(--encre-clair);cursor:pointer
+}
+.filtres button[aria-pressed="true"]{background:var(--encre);color:var(--creme);border-color:var(--encre)}
+.filtres button:focus-visible{outline:2px solid var(--ocre);outline-offset:2px}
+
+.morceau{
+  border-top:1px solid var(--trait);padding:16px 0 18px;
+  display:grid;grid-template-columns:26px 1fr;gap:0 12px
+}
+.morceau:last-child{border-bottom:1px solid var(--trait)}
+.coche{
+  width:20px;height:20px;margin:4px 0 0;accent-color:var(--brique);cursor:pointer
+}
+.m-titre{font-family:var(--serif);font-size:21px;font-weight:600;margin:0;line-height:1.15}
+.m-titre .interprete{
+  font-family:var(--sans);font-size:12px;font-weight:400;color:var(--encre-clair);
+  display:block;margin-top:2px;letter-spacing:.02em
+}
+.m-corps{margin-top:9px}
+.grillech{
+  font-family:var(--serif);font-size:19px;letter-spacing:.01em;
+  background:#fff9ee;border-left:3px solid var(--ocre-clair);
+  padding:9px 12px;margin:0 0 9px;overflow-x:auto;white-space:nowrap
+}
+.meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.tag{
+  font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;
+  padding:3px 8px;border-radius:2px;background:var(--creme-fonce);color:var(--encre-clair)
+}
+.tag.tempo{background:var(--encre);color:var(--creme)}
+.tag.r{background:var(--ocre-clair);color:var(--encre)}
+.objectif{margin:0;font-size:14px;color:var(--encre-clair)}
+.objectif strong{color:var(--encre);font-weight:500}
+.morceau.fait .m-titre{opacity:.42;text-decoration:line-through}
+.morceau[hidden]{display:none}
+
+/* ---- protocole ---- */
+.proto{counter-reset:etape;list-style:none;padding:0;margin:0}
+.proto li{
+  counter-increment:etape;padding:0 0 14px 40px;position:relative;font-size:15px
+}
+.proto li::before{
+  content:counter(etape);position:absolute;left:0;top:0;
+  font-family:var(--serif);font-size:22px;color:var(--ocre);line-height:1.1
+}
+footer{
+  margin-top:44px;padding-top:16px;border-top:1px solid var(--trait);
+  font-size:12px;color:var(--encre-clair);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+button.raz{
+  font-family:var(--sans);font-size:12px;background:none;border:none;
+  color:var(--brique);text-decoration:underline;cursor:pointer;padding:0
+}
+@media (prefers-reduced-motion:no-preference){
+  .morceau{transition:opacity .18s ease}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Rhythm Guitar · Buckingham &amp; Paschal · chapitres 1–2</p>
+  <h1>Vingt et un accords,<br><em>et de quoi les user</em></h1>
+  <p class="chapeau">Morceaux dont la grille entière tient dans les 21 accords du livre. Rien à transposer, rien à improviser : tu ouvres, tu joues.</p>
+</header>
+
+<section>
+  <h2><span class="num">I</span> Ce que tu as en main</h2>
+  <p class="sous">Trois familles, trois niveaux de difficulté pour la main gauche.</p>
+
+  <div class="lot">
+    <div class="lot-titre">Positions ouvertes — aucun barré</div>
+    <div class="accords">
+      <span class="ac">C</span><span class="ac">D</span><span class="ac">E</span><span class="ac">G</span><span class="ac">A</span>
+      <span class="ac">Dm</span><span class="ac">Em</span><span class="ac">Am</span>
+      <span class="ac">C7</span><span class="ac">D7</span><span class="ac">E7</span><span class="ac">G7</span><span class="ac">A7</span>
+    </div>
+  </div>
+
+  <div class="lot">
+    <div class="lot-titre">Barré partiel — index sur deux ou trois cordes</div>
+    <div class="accords">
+      <span class="ac barre">F</span><span class="ac barre">Fm</span><span class="ac barre">F7</span><span class="ac barre">B7</span>
+    </div>
+  </div>
+
+  <div class="lot">
+    <div class="lot-titre">Formes mobiles — barré complet, transposables case par case</div>
+    <div class="accords">
+      <span class="ac mobile">B</span><span class="ac mobile">Bm</span><span class="ac mobile">Gm</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">II</span> Les cinq mains droites</h2>
+  <p class="sous">Une mesure de 4/4, lue en croches. Case pleine&nbsp;= frappe, <span style="color:var(--brique)">brique</span>&nbsp;= accent, <span style="color:var(--ocre)">×</span>&nbsp;= étouffé, vide&nbsp;= rien.</p>
+  <div id="rythmes"></div>
+</section>
+
+<section>
+  <h2><span class="num">III</span> Le répertoire</h2>
+  <p class="sous">Coche ce qui tourne sans accroc au tempo cible. L'état reste sur cet appareil.</p>
+  <div class="filtres" id="filtres">
+    <button data-f="tout" aria-pressed="true">Tout</button>
+    <button data-f="ouvert" aria-pressed="false">Ouverts seulement</button>
+    <button data-f="barre" aria-pressed="false">Avec barré</button>
+    <button data-f="sept" aria-pressed="false">Septièmes / blues</button>
+  </div>
+  <div id="morceaux"></div>
+</section>
+
+<section>
+  <h2><span class="num">IV</span> Protocole</h2>
+  <p class="sous">Le problème n'est jamais la forme de l'accord. C'est le temps de passage.</p>
+  <ol class="proto">
+    <li>Trois morceaux à la fois, pas dix. Un par famille rythmique.</li>
+    <li>Métronome sur les temps 2 et 4 seulement, pas sur les quatre. Tu tiens la pulsation, il te contredit.</li>
+    <li>Descends le tempo jusqu'à ce qu'aucun changement d'accord ne soit raté. Ce tempo-là est ton vrai point de départ, même s'il est humiliant.</li>
+    <li>Montée par paliers de 4&nbsp;BPM. Un palier tenu = deux passages consécutifs sans faute.</li>
+    <li>Sur un changement qui bloque, isole les deux accords seuls : quatre temps sur l'un, quatre sur l'autre, puis deux, puis un.</li>
+    <li>Enregistre-toi une fois par semaine. C'est le seul juge qui ne triche pas.</li>
+  </ol>
+</section>
+
+<footer>
+  <span id="compteur">—</span>
+  <button class="raz" id="raz">Tout décocher</button>
+</footer>
+
+</div>
+
+<script>
+/* ---------- rythmes : 8 croches, . = rien, D = tiré vers le bas, U = poussé, X = étouffé, ! = accent bas ---------- */
+const RYTHMES=[
+ {id:"R1",nom:"Noires — la fondation",note:"Quatre coups vers le bas. À jouer jusqu'à ce que ce soit ennuyeux, puis encore.",pat:["!",".","D",".","D",".","D","."]},
+ {id:"R2",nom:"Croches continues",note:"Bas-haut sans interruption. Le poignet ne s'arrête jamais, même quand tu ne touches pas les cordes.",pat:["!","U","D","U","D","U","D","U"]},
+ {id:"R3",nom:"Folk — le passe-partout",note:"Bas · bas-haut · haut · bas-haut. Le temps 3 est sauté vers le bas : c'est là que ça groove.",pat:["!",".","D","U",".","U","D","U"]},
+ {id:"R4",nom:"Contretemps",note:"Rien sur les temps, tout entre les temps. Étouffe la main gauche juste après chaque frappe.",pat:[".","U",".","U",".","U",".","U"]},
+ {id:"R5",nom:"Boom-chick",note:"Basse seule sur 1 et 3, accord étouffé sur 2 et 4. Le pouce et le reste se répondent.",pat:["!",".","X",".","D",".","X","."]}
+];
+const COMPTE=["1","&","2","&","3","&","4","&"];
+const SYM={".":"","D":"↓","U":"↑","X":"×","!":"↓"};
+
+document.getElementById("rythmes").innerHTML=RYTHMES.map(r=>{
+  const cells=r.pat.map((p,i)=>{
+    let cls="cel";
+    if(p===".") cls+= (i%2===0?" temps":"");
+    else if(p==="X") cls+=" mute";
+    else cls+=" frappe"+(p==="!"?" acc":"");
+    return `<div class="${cls}">${SYM[p]}</div>`;
+  }).join("");
+  return `<div class="rythme">
+    <h3>${r.id} · ${r.nom}</h3>
+    <p class="r-note">${r.note}</p>
+    <div class="grille">${cells}</div>
+    <div class="compte">${COMPTE.map(c=>`<span>${c}</span>`).join("")}</div>
+  </div>`;
+}).join("");
+
+/* ---------- répertoire ---------- */
+const MORCEAUX=[
+ {id:"knockin",t:"Knockin' on Heaven's Door",a:"Bob Dylan",g:"G — D — Am — Am ‖ G — D — C — C",r:"R1 puis R3",bpm:"68–76",cat:["ouvert"],o:"Le point dur est <strong>Am → G</strong> : aucun doigt commun, les trois traversent le manche en sens inverse. En R3 la dernière frappe tombe sur le « et » du 4, une demi-croche avant le changement. <strong>Sacrifie ce poussé</strong> : lève la main gauche pendant qu'il sonne, les cordes à vide ne s'entendent pas. Le G se joue 3-2-4, index libre : pose l'annulaire sur la 6ᵉ corde d'abord, le reste suit. Am → C, lui, ne coûte qu'un doigt — bon échauffement, mais il n'apparaît pas dans le morceau."},
+ {id:"badmoon",t:"Bad Moon Rising",a:"Creedence Clearwater Revival",g:"D — A — G — D",r:"R3",bpm:"90–110",cat:["ouvert"],o:"Le A → G en une croche. <strong>Prépare la main pendant la dernière croche de la mesure</strong>, pas après."},
+ {id:"birds",t:"Three Little Birds",a:"Bob Marley",g:"A — D — A ‖ A — E — D — A",r:"R4",bpm:"72–80",cat:["ouvert"],o:"Rien sur les temps. <strong>Ton oreille de percussionniste est un avantage ici</strong> : traite la guitare comme une peau aiguë qui répond au dunun."},
+ {id:"country",t:"Take Me Home, Country Roads",a:"John Denver — en sol",g:"G — Em — D — C ‖ G — D — C — G",r:"R3",bpm:"84–96",cat:["ouvert"],o:"Le cycle le plus rentable de tout le répertoire pop. <strong>G → Em ne coûte qu'un doigt</strong>, sers-t'en pour respirer avant le D."},
+ {id:"zombie",t:"Zombie",a:"The Cranberries",g:"Em — C — G — D  (en boucle, sans exception)",r:"R2",bpm:"84–92",cat:["ouvert"],o:"Quatre accords, jamais une variation. <strong>C'est l'exercice de métronome idéal</strong> : tu peux monter le tempo sans jamais te demander où tu en es."},
+ {id:"redemption",t:"Redemption Song",a:"Bob Marley",g:"G — Em — C — G ‖ G — Em — Am — C — D",r:"R1 ou arpège",bpm:"72–80",cat:["ouvert"],o:"À jouer d'abord plaqué, puis corde par corde. <strong>C'est ton pont vers le chapitre fingerstyle</strong>."},
+ {id:"wish",t:"Wish You Were Here",a:"Pink Floyd",g:"Em — G — Em — G ‖ Em — A ‖ G — C — D — Am — G",r:"R3",bpm:"60–70",cat:["ouvert"],o:"Six accords ouverts, tempo lent, harmonie qui bouge sans arrêt. <strong>Le meilleur test de mémoire de grille</strong> de la liste."},
+ {id:"religion",t:"Losing My Religion",a:"R.E.M.",g:"Am — Em ‖ Am — Em — Am — Em ‖ Dm — G",r:"R2",bpm:"120–128",cat:["ouvert"],o:"Rapide, mais Am ↔ Em est presque gratuit. <strong>Utilise-le pour travailler la vitesse pure</strong> sans buter sur la main gauche."},
+ {id:"letitbe",t:"Let It Be",a:"The Beatles",g:"C — G — Am — F ‖ C — G — F — C",r:"R3",bpm:"70–76",cat:["barre"],o:"Le F du livre (barré partiel) arrive au pire moment, en fin de phrase. <strong>Si le barré siffle, attaque-le comme un accord de trois cordes</strong> et ajoute la basse ensuite."},
+ {id:"derniere",t:"Dernière danse",a:"Indila",g:"Am — F — C — G  (en boucle)",r:"R2",bpm:"104–112",cat:["barre"],o:"Même cycle que Zombie, un cran plus haut : <strong>le F remplace le Em</strong>. Passe de l'un à l'autre le même jour pour mesurer ce que coûte le barré."},
+ {id:"hittheroad",t:"Hit the Road Jack",a:"Ray Charles",g:"Am — G — F — E7  (deux temps chacun)",r:"R2 accentué",bpm:"120–132",cat:["barre","sept"],o:"Descente chromatique, deux temps par accord : <strong>quatre changements par mesure et demie</strong>. C'est court, brutal et ça règle la main gauche plus vite que n'importe quel exercice."},
+ {id:"folsom",t:"Folsom Prison Blues",a:"Johnny Cash",g:"E ×4 ‖ E ×2 — A ×2 ‖ E ×2 — B7 — E",r:"R5",bpm:"100–120",cat:["sept","barre"],o:"Basse alternée pouce et accord étouffé. <strong>Le B7 est ta première vraie utilité de septième</strong> : il tire vers le E, écoute la tension."},
+ {id:"blues12",t:"Blues 12 mesures en la",a:"Sweet Home Chicago, Hound Dog, Kansas City…",g:"A7 ×4 ‖ D7 ×2 — A7 ×2 ‖ E7 — D7 — A7 — E7",r:"R5 en shuffle",bpm:"80–100",cat:["sept"],o:"La grille qui ouvre des milliers de morceaux. <strong>Apprends-la par cœur avant d'apprendre un titre</strong> : ensuite tu joues tout le catalogue."}
+];
+
+const CLE="rg_ch12_acquis";
+const conteneur=document.getElementById("morceaux");
+let etat={};
+try{etat=JSON.parse(localStorage.getItem(CLE))||{}}catch(e){etat={}}
+
+conteneur.innerHTML=MORCEAUX.map(m=>`
+ <article class="morceau${etat[m.id]?" fait":""}" data-id="${m.id}" data-cat="${m.cat.join(" ")}">
+   <input class="coche" type="checkbox" id="c-${m.id}" ${etat[m.id]?"checked":""} aria-label="Marquer ${m.t} comme acquis">
+   <div>
+     <h3 class="m-titre"><label for="c-${m.id}">${m.t}</label><span class="interprete">${m.a}</span></h3>
+     <div class="m-corps">
+       <p class="grillech">${m.g}</p>
+       <div class="meta">
+         <span class="tag tempo">${m.bpm} BPM</span>
+         <span class="tag r">${m.r}</span>
+       </div>
+       <p class="objectif">${m.o}</p>
+     </div>
+   </div>
+ </article>`).join("");
+
+function majCompteur(){
+  const n=MORCEAUX.filter(m=>etat[m.id]).length;
+  document.getElementById("compteur").textContent=
+    n===0?"Aucun morceau validé pour l'instant.":`${n} morceau${n>1?"x":""} sur ${MORCEAUX.length} au tempo cible.`;
+}
+majCompteur();
+
+conteneur.addEventListener("change",e=>{
+  if(!e.target.classList.contains("coche"))return;
+  const art=e.target.closest(".morceau");
+  etat[art.dataset.id]=e.target.checked;
+  art.classList.toggle("fait",e.target.checked);
+  try{localStorage.setItem(CLE,JSON.stringify(etat))}catch(err){}
+  majCompteur();
+});
+
+document.getElementById("raz").addEventListener("click",()=>{
+  etat={};
+  try{localStorage.removeItem(CLE)}catch(err){}
+  conteneur.querySelectorAll(".coche").forEach(c=>c.checked=false);
+  conteneur.querySelectorAll(".morceau").forEach(a=>a.classList.remove("fait"));
+  majCompteur();
+});
+
+document.getElementById("filtres").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  document.querySelectorAll("#filtres button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  const f=b.dataset.f;
+  conteneur.querySelectorAll(".morceau").forEach(a=>{
+    a.hidden = f!=="tout" && !a.dataset.cat.split(" ").includes(f);
+  });
+});
+</script>
+</body>
+</html>
