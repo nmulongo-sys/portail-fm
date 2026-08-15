@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chantiers — improvguit · comping · métronome</title>
+<style>
+/* ============================================================
+   Identité maison : crème / sépia / ocre-or.
+   Aucune dépendance externe : les familles de tête sont
+   utilisées si elles sont installées, sinon repli système.
+   ============================================================ */
+:root{
+  --creme:#F5EFE3;
+  --creme-2:#EDE4D3;
+  --sepia:#3A2E24;
+  --sepia-2:#6B5947;
+  --sepia-3:#9C8A76;
+  --or:#B8873A;
+  --rouille:#9A5A3C;
+  --trait:#DCCFB8;
+  --ombre:0 1px 0 rgba(58,46,36,.06);
+  --serif:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --sans:"Work Sans","Avenir Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--creme);
+  color:var(--sepia);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+  padding:0 0 4rem;
+}
+.enveloppe{max-width:52rem;margin:0 auto;padding:0 1rem}
+
+/* ---------- en-tête ---------- */
+header{padding:2rem 0 1.25rem}
+.surtitre{
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sepia-3);margin:0 0 .5rem
+}
+h1{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(2rem,7vw,2.9rem);line-height:1.05;
+  margin:0 0 .4rem;letter-spacing:-.01em
+}
+.chapeau{color:var(--sepia-2);margin:0;max-width:38rem;font-size:.95rem}
+
+/* ---------- le barrage : signature de la page ---------- */
+.barrage{
+  border-top:1px solid var(--trait);border-bottom:1px solid var(--trait);
+  margin:1.5rem 0 0;padding:1.1rem 0
+}
+.barrage h2{
+  font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--sepia-3);margin:0 0 .85rem;font-weight:600
+}
+.vannes{display:grid;gap:.6rem}
+.vanne{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;
+  gap:.7rem;padding:.55rem .75rem;background:var(--creme-2);
+  border-left:3px solid var(--or);cursor:pointer;text-align:left;
+  border-top:0;border-right:0;border-bottom:0;width:100%;
+  font:inherit;color:inherit
+}
+.vanne:hover,.vanne:focus-visible{background:#E6DAC5}
+.vanne .cle{font-family:var(--serif);font-size:1.15rem;font-weight:600;white-space:nowrap}
+.vanne .quoi{font-size:.87rem;color:var(--sepia-2)}
+.vanne .retenu{
+  font-size:.72rem;letter-spacing:.06em;color:var(--rouille);
+  white-space:nowrap;font-variant-numeric:tabular-nums
+}
+.vanne[data-ouverte="oui"]{border-left-color:var(--sepia-3);opacity:.55}
+
+/* ---------- prochain geste ---------- */
+.geste{
+  margin:1.5rem 0 0;padding:1.15rem 1.15rem 1.25rem;
+  background:var(--sepia);color:var(--creme);border-radius:2px
+}
+.geste .surtitre{color:rgba(245,239,227,.55);margin-bottom:.35rem}
+.geste p{margin:0;font-family:var(--serif);font-size:1.35rem;line-height:1.25}
+.geste .pourquoi{
+  font-family:var(--sans);font-size:.85rem;line-height:1.45;
+  color:rgba(245,239,227,.72);margin-top:.6rem
+}
+
+/* ---------- filtres ---------- */
+.filtres{
+  display:flex;flex-wrap:wrap;gap:.4rem;margin:1.75rem 0 .5rem;
+  padding-bottom:.9rem;border-bottom:1px solid var(--trait)
+}
+.filtres .groupe{display:flex;flex-wrap:wrap;gap:.35rem;margin-right:.75rem}
+.f{
+  font:inherit;font-size:.78rem;letter-spacing:.03em;
+  padding:.32rem .7rem;border:1px solid var(--trait);
+  background:transparent;color:var(--sepia-2);cursor:pointer;border-radius:1px
+}
+.f:hover{border-color:var(--sepia-3)}
+.f[aria-pressed="true"]{background:var(--sepia);color:var(--creme);border-color:var(--sepia)}
+.compte{
+  margin-left:auto;align-self:center;font-size:.75rem;color:var(--sepia-3);
+  font-variant-numeric:tabular-nums
+}
+
+/* ---------- listes ---------- */
+.bloc{margin:1.75rem 0 0}
+.bloc > h2{
+  font-family:var(--serif);font-size:1.5rem;font-weight:600;
+  margin:0 0 .15rem;letter-spacing:-.01em
+}
+.bloc > .note{font-size:.85rem;color:var(--sepia-2);margin:0 0 .9rem;max-width:36rem}
+
+ul.items{list-style:none;margin:0;padding:0}
+li.item{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:.65rem;
+  padding:.8rem 0;
+  border-bottom:1px solid var(--trait)
+}
+li.item:first-child{border-top:1px solid var(--trait)}
+.coche{
+  appearance:none;-webkit-appearance:none;
+  width:1.05rem;height:1.05rem;margin:.28rem 0 0;
+  border:1px solid var(--sepia-3);background:transparent;
+  cursor:pointer;border-radius:1px;flex:none;position:relative
+}
+.coche:checked{background:var(--or);border-color:var(--or)}
+.coche:checked::after{
+  content:"";position:absolute;left:.3rem;top:.08rem;
+  width:.28rem;height:.6rem;border:solid var(--creme);
+  border-width:0 2px 2px 0;transform:rotate(42deg)
+}
+.coche:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+
+.ligne1{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem}
+.id{
+  font-family:var(--serif);font-weight:600;font-size:1.05rem;
+  white-space:nowrap;letter-spacing:.01em
+}
+.appe{
+  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--sepia-3);white-space:nowrap
+}
+.cout{
+  font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--sepia-3);margin-left:auto;white-space:nowrap
+}
+.titre{font-size:.94rem;margin:.15rem 0 0;line-height:1.4}
+.raison{
+  font-size:.8rem;color:var(--sepia-2);margin:.35rem 0 0;
+  padding-left:.7rem;border-left:2px solid var(--trait)
+}
+.verrou{color:var(--rouille)}
+.verrou b{font-weight:600}
+li.item[data-fait="oui"] .titre,
+li.item[data-fait="oui"] .ligne1{opacity:.42;text-decoration:line-through;text-decoration-thickness:1px}
+li.item[data-fait="oui"] .raison{opacity:.42;text-decoration:none}
+
+.paire{font-size:.78rem;color:var(--or);margin:.3rem 0 0}
+.vide{color:var(--sepia-3);font-style:italic;padding:1.5rem 0}
+
+footer{
+  margin-top:3rem;padding-top:1rem;border-top:1px solid var(--trait);
+  font-size:.78rem;color:var(--sepia-3)
+}
+footer button{
+  font:inherit;font-size:.78rem;background:none;border:0;
+  color:var(--rouille);text-decoration:underline;cursor:pointer;padding:0
+}
+@media (min-width:40rem){
+  .vannes{grid-template-columns:1fr;gap:.5rem}
+  li.item{grid-template-columns:auto 1fr;gap:.85rem}
+}
+@media (prefers-reduced-motion:no-preference){
+  .f,.vanne,.coche{transition:background .15s ease,border-color .15s ease,opacity .15s ease}
+}
+</style>
+</head>
+<body>
+<div class="enveloppe">
+
+<header>
+  <p class="surtitre">Portail Formation Musicale · état au 14 août 2026</p>
+  <h1>Chantiers</h1>
+  <p class="chapeau">Les trois roadmaps du 14 août 2026 fusionnées en un seul graphe.
+     Un item n'apparaît comme <em>prêt</em> que si tout ce dont il dépend est fait.</p>
+
+  <section class="barrage" aria-labelledby="t-barrage">
+    <h2 id="t-barrage">Ce qui retient le reste</h2>
+    <div class="vannes" id="vannes"></div>
+  </section>
+
+  <div class="geste">
+    <p class="surtitre">Prochain geste</p>
+    <p id="geste-texte">—</p>
+    <p class="pourquoi" id="geste-pourquoi"></p>
+  </div>
+</header>
+
+<nav class="filtres" aria-label="Filtres">
+  <div class="groupe" role="group" aria-label="Application">
+    <button class="f" data-app="tous" aria-pressed="true">Tout</button>
+    <button class="f" data-app="IG" aria-pressed="false">improvguit</button>
+    <button class="f" data-app="CP" aria-pressed="false">comping</button>
+    <button class="f" data-app="MT" aria-pressed="false">métronome</button>
+    <button class="f" data-app="SO" aria-pressed="false">socle</button>
+  </div>
+  <div class="groupe" role="group" aria-label="Affichage">
+    <button class="f" data-vue="pret" aria-pressed="true">Prêt</button>
+    <button class="f" data-vue="tout" aria-pressed="false">Tout</button>
+  </div>
+  <span class="compte" id="compte"></span>
+</nav>
+
+<main id="listes"></main>
+
+<footer>
+  <p>Les cases cochées restent dans ce navigateur (<code>fm.chantiers.v1</code>).
+     Rien n'est envoyé nulle part.
+     <button type="button" id="raz">Tout décocher</button></p>
+  <p>Sources : <code>00-decisions-actees.md</code>, <code>01-roadmap-improvguit.md</code>,
+     <code>02-roadmap-comping.md</code>, <code>03-roadmap-metronome.md</code>.</p>
+</footer>
+
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ============================================================
+   1. LE GRAPHE
+   Chaque item : id, app, titre, coût, dépendances, raison.
+   `dep` ne contient que des dépendances DURES — l'item est
+   inexécutable tant qu'elles ne sont pas faites.
+   `paire` signale une complémentarité, pas un blocage.
+   ============================================================ */
+
+const OREILLE = 'oreille';   // coût particulier : ne se code pas, se tranche en jouant
+
+const ITEMS = [
+
+  /* ---------- socle commun aux trois apps ---------- */
+  {id:'CP-17', app:'CP', socle:true, phase:'Socle · SPEC-GRILLE v1', cout:'moyen', dep:[],
+   titre:"SPEC-GRILLE v1 : cinq états X x - . m, ligne de frappe séparée, slots arbitraires, champ groupement, mesure obligatoire.",
+   raison:"Modèle de données commun aux trois apps (00 §2). Aucun patron ne se verse avant. Verser puis migrer, c'est réencoder deux fois — la conversion inverse est lossy."},
+
+  {id:'S-ART', app:'SO', socle:true, phase:'Socle · corpus partagés', cout:'moyen', dep:[],
+   titre:"Corpus PISTE-ARTICULATION : les sept étapes de 00 §5 mises en données, une seule fois.",
+   raison:"Ni la roadmap improvguit ni celle de comping ne porte cet item : chacune décrit son rendu (IG-19, CP-21) en supposant la source écrite. Elle ne l'est pas encore."},
+
+  {id:'S-OPE', app:'SO', socle:true, phase:'Socle · corpus partagés', cout:'faible', dep:[],
+   titre:"Corpus OPERATEURS : la table des dix (00 §6) mise en données, une seule fois.",
+   raison:"Alimente IG-10, CP-22 et la refonte A2. Même situation que la piste articulation : trois consommateurs, aucun producteur listé."},
+
+  /* ---------- improvguit ---------- */
+  {id:'IG-18', app:'IG', phase:'improvguit · phase 0', cout:'très faible', dep:[],
+   titre:"Corriger la consigne de repli de G8 : les V7 ne sont pas les seuls accords substituables.",
+   raison:"Consigne factuellement fausse, démentie trente fois par la source. À réparer avant toute autre intervention sur G8."},
+  {id:'IG-06', app:'IG', phase:'improvguit · phase 0', cout:'très faible', dep:[],
+   titre:"Bourdon par défaut en G4, G5 et G8, et degré du bourdon paramétrable au lieu de la tonique constante."},
+  {id:'IG-16', app:'IG', phase:'improvguit · phase 0', cout:'très faible', dep:[],
+   titre:"Verser dans le t: du modèle i–iv–V7 la justification de la dominante empruntée."},
+
+  {id:'A2', app:'IG', phase:'improvguit · préalable moteur', cout:'moyen', dep:[],
+   titre:"Refonte de tirerContrainte() : la fonction passe de deux grades à cinq appelants.",
+   raison:"Rangée en phase 3 par la roadmap, mais son propre texte dit de la faire AVANT les corpus de la phase 1. Un seul chantier plutôt que quatre ajouts successifs."},
+
+  {id:'IG-07+08', app:'IG', phase:'improvguit · phase 1', cout:'faible', dep:[],
+   titre:"Corpus SUBSTITUTS indexé par qualité d'accord — et son critère, dans le même versement.",
+   raison:"Paire non sécable (V1) : la table sans le critère produit une géométrie, pas de la musique."},
+  {id:'IG-13', app:'IG', phase:'improvguit · phase 1', cout:'très faible', dep:[],
+   titre:"Dix-neuf entrées MODELES : neuf vamps d'un seul accord, dix progressions dont six mineures.",
+   raison:"L'app n'a aucun vamp aujourd'hui, alors que c'est le contexte où une superposition s'entend le mieux."},
+  {id:'IG-02', app:'IG', phase:'improvguit · phase 1', cout:'très faible', dep:[],
+   titre:"Règle de placement métrique du chromatisme dans les bulles de G6 : temps fort contre contretemps.",
+   raison:"G6 explique déjà l'approche chromatique sans jamais dire quand la poser."},
+  {id:'IG-14', app:'IG', phase:'improvguit · phase 1', cout:'très faible', dep:['A2'],
+   titre:"CONTRAINTES_G1 indexées par style : ska, funk, Travis, metal."},
+  {id:'IG-01', app:'IG', phase:'improvguit · phase 1', cout:'faible', dep:['A2'],
+   titre:"Corpus CONTOURS_G7 : cinq formes d'intensité et huit leviers, dont quatre rythmiques.",
+   paire:['CP-15']},
+  {id:'IG-09', app:'IG', phase:'improvguit · phase 1', cout:'très faible', dep:['A2','IG-07+08'],
+   titre:"Corpus CONTRAINTES_G8 : placement métrique de la sortie et de la résolution."},
+  {id:'IG-17', app:'IG', phase:'improvguit · phase 1', cout:'faible', dep:['IG-13','IG-07+08'],
+   titre:"Exercice à trois niveaux sur vamp : arpège seul, une triade substituée, deux enchaînées."},
+  {id:'A3', app:'IG', phase:'improvguit · phase 1', cout:'faible', dep:['IG-13'],
+   titre:"Ergonomie de sélection : MODELES passe de 8 à ~27 entrées.",
+   raison:"Point non traité par les sources. À vérifier avant de tout verser d'un coup."},
+
+  {id:'IG-12', app:'IG', phase:'improvguit · phase 2', cout:'faible', dep:['S-OPE'],
+   titre:"Générateur de translation (O2) : une cellule → 4 paires de cordes × 3 traitements = 12 exercices."},
+  {id:'IG-19', app:'IG', phase:'improvguit · phase 2', cout:'moyen', dep:['S-ART'],
+   titre:"Retirer G10 « Voix » et brancher le rendu improvguit de la piste articulation."},
+  {id:'IG-20', app:'IG', phase:'improvguit · phase 2', cout:'moyen', dep:['IG-12'],
+   titre:"Ouvrir la piste intervalle : la consigne porte sur l'écart, jamais sur l'identité des notes.",
+   raison:"IG-12 en est le moteur ; l'ouvrir avant reviendrait à écrire les consignes sans le générateur qui les produit."},
+
+  {id:'IG-10', app:'IG', phase:'improvguit · phase 3', cout:'faible', dep:['S-OPE','A2'],
+   titre:"Rendu improvguit des dix opérateurs — commencer par O1, le seul vérifiable sans instrumentation."},
+  {id:'IG-21', app:'IG', phase:'improvguit · phase 3', cout:'moyen', dep:['IG-10'],
+   titre:"X10 : champ profondeur calculé ; G0–G9 subsistent comme ordre de service."},
+
+  {id:'IG-11', app:'IG', phase:'improvguit · phase 4', cout:'faible', dep:[],
+   titre:"Module QUALITES : cinq arpèges de septième sur une forme unique, fondamentale mobile.",
+   raison:"Manque autant à improvguit qu'à comping — un objet à concevoir une fois pour les deux."},
+  {id:'IG-03', app:'IG', phase:'improvguit · phase 4', cout:'moyen', dep:[],
+   titre:"Mode habillage : squelette en croches pures, articulation décidée par écrit, déplacement obligatoire à chaque tour."},
+  {id:'IG-04', app:'IG', phase:'improvguit · phase 4', cout:'moyen', dep:[],
+   titre:"Mode sans guitare : nommer ou pointer avant d'entendre."},
+  {id:'IG-15', app:'IG', phase:'improvguit · phase 4', cout:'moyen', dep:[],
+   titre:"Réservoir hexatonique : désigner deux triades et afficher leur union, pour rendre visible que le réservoir est construit."},
+  {id:'IG-05', app:'IG', phase:'improvguit · phase 4', cout:'moyen', dep:[],
+   titre:"G9 : l'app joue l'appel, l'élève répond. Le mode existe déjà côté percussion du métronome."},
+
+  /* ---------- comping ---------- */
+  {id:'CP-02', app:'CP', phase:'comping · phase 0', cout:'très faible', dep:[],
+   titre:"Carte « la fenêtre » : étouffer les cordes pendant le déplacement de la main gauche.",
+   raison:"Seul critère de changement d'accord qui soit rythmique et non harmonique : la grille n'a pas de trou."},
+  {id:'CP-01', app:'CP', phase:'comping · phase 0', cout:'faible', dep:[],
+   titre:"Trois cartes de timing mesurables en 45 s : economy picking, sweep, sextolet."},
+  {id:'CP-05', app:'CP', phase:'comping · phase 0', cout:'très faible', dep:[],
+   titre:"Trois dispositifs de comptage verbaux : « trip-uh-let », « 1-2-3 / 4-5-6 », « One-ee-trip-uh-let »."},
+  {id:'CP-16', app:'CP', phase:'comping · phase 0', cout:'très faible', dep:[],
+   titre:"Énoncer une fois pour toutes le principe de grille invariante de main droite.",
+   raison:"Pont conceptuel entre la main du percussionniste et celle du guitariste : les deux mondes du Portail l'appliquent déjà sans le nommer."},
+  {id:'CP-09', app:'CP', phase:'comping · phase 0', cout:'très faible', dep:[],
+   titre:"Champ « prérequis d'instrument » (booléen).",
+   raison:"Sans ce champ, l'app proposera le bend derrière le sillet à un instrument à vibrato bloquant."},
+
+  {id:'W1', app:'CP', phase:'comping · à trancher à l\'oreille', cout:OREILLE, dep:[],
+   titre:"Rampe country : 60-184 imprimé contre 56-168 cut time annoncé. Trancher le référentiel métrique.",
+   raison:"Écart répété sur 25 exercices : une convention, pas une coquille. Verser en l'état donnerait un exercice deux fois trop lent ou deux fois trop rapide. Bloque CP-20, donc toute la phase 1."},
+  {id:'W2', app:'CP', phase:'comping · à trancher à l\'oreille', cout:OREILLE, dep:[],
+   titre:"Rampe blues shuffle : huit plages enregistrées, employées par aucun exercice vérifié. Vérifier avant de verser."},
+
+  {id:'CP-18', app:'CP', phase:'comping · phase 1', cout:'faible', dep:['CP-17'],
+   titre:"Migrer les patrons existants : ↓ → x/d, ↑ → x/u, · → ./. Conversion mécanique et sans perte."},
+  {id:'CP-19', app:'CP', phase:'comping · phase 1', cout:'faible', dep:['CP-17'],
+   titre:"X7 : découpler la mesure. Le champ mesurable se dérive de la grille au lieu d'être saisi.",
+   raison:"Tombe gratuitement de CP-17 : les figures à palm mute deviennent partiellement mesurables sans toucher au moteur de détection."},
+  {id:'CP-20', app:'CP', phase:'comping · phase 1', cout:'moyen', dep:['W1','W2'],
+   titre:"X5 : le tempo à trois niveaux — genre → rampe de huit paliers, style → fourchette, carte → hérite."},
+
+  {id:'CP-03', app:'CP', phase:'comping · phase 2', cout:'faible', dep:['CP-17'],
+   titre:"Corpus STYLES : douze étiquettes ramenées à cinq familles rythmiques, chacune avec la raison pour laquelle ce style sonne comme lui-même."},
+  {id:'CP-04', app:'CP', phase:'comping · phase 2', cout:'très faible', dep:['CP-17'],
+   titre:"Deux critères génériques de gratté — à verser en même temps que CP-12/13/14/15, pas après."},
+  {id:'CP-12', app:'CP', phase:'comping · phase 2', cout:'faible', dep:['CP-17','CP-18'],
+   titre:"Verser 40 patrons de gratté (Nelson 2013), déjà encodés à la source par les flèches de médiator."},
+  {id:'CP-13', app:'CP', phase:'comping · phase 2', cout:'moyen', dep:['CP-17','CP-20'],
+   titre:"Verser le corpus latin : quarante danses, dont dix-huit qu'aucune autre source ne couvrait.",
+   raison:"Sans tempo à la source — d'où la dépendance à CP-20. V4 impératif : la samba y passe de 4/4 à ¢ puis 3/4 puis 7/4 sans un mot."},
+  {id:'CP-14', app:'CP', phase:'comping · phase 2', cout:'moyen', dep:['CP-17'],
+   titre:"Verser les métriques impaires avec leur champ groupement, imprimé par la source."},
+  {id:'CP-15', app:'CP', phase:'comping · phase 2', cout:'faible', dep:['CP-17'],
+   titre:"Verser les phrases de quatre mesures : elles montrent une construction, pas un patron à boucler.",
+   paire:['IG-01']},
+  {id:'CP-06', app:'CP', phase:'comping · phase 2', cout:'faible', dep:[],
+   titre:"Distinguer dans les critères un enrichissement harmonique d'un enrichissement de geste."},
+
+  {id:'CP-08', app:'CP', phase:'comping · phase 3', cout:'moyen', dep:['CP-09'],
+   titre:"Piste bend sans mesure : douze paliers dans l'ordre de difficulté de la source."},
+  {id:'CP-21', app:'CP', phase:'comping · phase 3', cout:'moyen', dep:['S-ART'],
+   titre:"Brancher le rendu comping de la piste articulation : une carte par étape."},
+  {id:'CP-11', app:'CP', phase:'comping · phase 3', cout:'—', dep:['CP-21'],
+   titre:"Les chapitres 7 à 12, aujourd'hui déclarés sans cartes, se peuplent d'eux-mêmes.",
+   raison:"Effet de CP-21, pas une tâche distincte."},
+  {id:'CP-10', app:'CP', phase:'comping · phase 3', cout:'faible', dep:[],
+   titre:"Cartes de geste : tapping à deux mains, sauts de cordes, double-stops."},
+
+  {id:'CP-22', app:'CP', phase:'comping · phase 4', cout:'moyen', dep:['S-OPE'],
+   titre:"Carte + opérateur = carte. Le corpus cesse d'être une liste écrite à la main et devient engendré."},
+  {id:'CP-23', app:'CP', phase:'comping · phase 4', cout:'moyen', dep:['CP-22'],
+   titre:"X10 : champ profondeur calculé ; les paliers 0-6 subsistent comme ordre de service."},
+  {id:'CP-07', app:'CP', phase:'comping · phase 4', cout:'moyen', dep:[],
+   titre:"Champ succede_a : le même geste réintroduit à distance, en plus difficile, une fois la souche tombée en désuétude.",
+   raison:"Seul mécanisme du dossier qui traite l'oubli comme une ressource."},
+
+  {id:'CP-24', app:'CP', phase:'comping · phase 5', cout:'faible', dep:[],
+   titre:"X8 : second axe désynchronisé de la répétition espacée — tonalité, registre, jeu de cordes, densité."},
+  {id:'CP-25', app:'CP', phase:'comping · phase 5', cout:'faible', dep:[],
+   titre:"X6 : bloc échauffement élargi à quatre familles, dont « corps » — prévention des TMS."},
+
+  {id:'X7-bis', app:'CP', phase:'comping · point ouvert', cout:'moyen', dep:['CP-13'],
+   titre:"Ré-instrumentation du moteur de mesure : fusion_ms = 120 non justifié, sensibilité 2,5 trop haute.",
+   raison:"Le corpus versé en phase 2 est précisément un corpus de jeu rapide et nuancé : meilleur banc d'essai que le protocole actuel."},
+  {id:'A5', app:'CP', phase:'comping · point ouvert', cout:'faible', dep:[],
+   titre:"La notation à deux couches est à chercher chez Nelson — Travis picking et walking bass —, pas chez Fisher."},
+
+  /* ---------- métronome ---------- */
+  {id:'MT-01', app:'MT', phase:'métronome · phase 0', cout:'faible', dep:[],
+   titre:"Exercice « même motif, quatre feels » : broderie fixe, contexte rythmique variable.",
+   raison:"Faisable avec les presets existants, sans rien attendre des autres apps."},
+  {id:'MT-03', app:'MT', phase:'métronome · phase 0', cout:'très faible', dep:[],
+   titre:"Documenter la convergence du déplacement métrique : cinq doubles dans une mesure de seize.",
+   raison:"Version guitare des modules 3-contre-2 et syncope perpétuelle du parcours funk. Le passage de l'un à l'autre est immédiat et n'a jamais été écrit."},
+  {id:'MT-04', app:'MT', phase:'métronome · phase 0', cout:'très faible', dep:[],
+   titre:"Documenter la distinction référence continue / interruption — ce qui justifie l'existence des deux modes."},
+
+  {id:'W4', app:'MT', phase:'métronome · à trancher à l\'oreille', cout:OREILLE, dep:[],
+   titre:"Contrôle de cohérence des tempos entre les deux corpus, avant tout appariement.",
+   raison:"Rock du métronome 85-100 contre funk du livre 100-104 ; ska à 152. Sans ce contrôle, un patron correct sonnera faux sur un groove correct."},
+  {id:'MT-02', app:'MT', phase:'métronome · phase 1', cout:'moyen', dep:['W4','CP-12'],
+   titre:"Jouer les patrons de gratté sur les grooves plutôt que sur le clic.",
+   raison:"Le contretemps du ska cesse d'être une case de la grille pour devenir une réponse au backbeat."},
+  {id:'MT-06', app:'MT', phase:'métronome · phase 1', cout:'faible', dep:['CP-20','W4'],
+   titre:"Fournir le tempo manquant au corpus Fisher en l'empruntant au groove apparié."},
+  {id:'MT-05', app:'MT', phase:'métronome · phase 2', cout:'faible', dep:['CP-13'],
+   titre:"Apparier les figures claviques de Fisher avec la doctrine de la clave déjà au corpus.",
+   raison:"Les figures n'impriment jamais le mot « clave » ; la doctrine n'a aucune figure de guitare. Complémentaires, pas redondantes."},
+
+  {id:'TROU', app:'MT', phase:'métronome · point ouvert', cout:'moyen', dep:[],
+   titre:"Ear training systématique : seul trou intégral du corpus après cinq ouvrages.",
+   raison:"Aucun matériau source. Le métronome est le mieux placé pour l'accueillir — grooves, appel-réponse, moteur de mesure."}
+];
+
+const NOM_APP = {IG:'improvguit', CP:'comping', MT:'métronome', SO:'socle'};
+const PAR_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+
+/* ============================================================
+   2. ÉTAT (localStorage)
+   ============================================================ */
+const CLE = 'fm.chantiers.v1';
+let faits = {};
+try { faits = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch(e){ faits = {}; }
+const estFait = id => faits[id] === true;
+function noter(id, v){
+  if (v) faits[id] = true; else delete faits[id];
+  try { localStorage.setItem(CLE, JSON.stringify(faits)); } catch(e){}
+}
+
+/* Un item est prêt si toutes ses dépendances dures sont faites. */
+const bloqueursDe = it => (it.dep || []).filter(d => !estFait(d));
+const estPret = it => !estFait(it.id) && bloqueursDe(it).length === 0;
+
+/* Combien d'items (non faits) sont retenus, directement ou non, par `id` ? */
+function retenusPar(id){
+  const vus = new Set();
+  const pile = [id];
+  while (pile.length){
+    const cur = pile.pop();
+    for (const it of ITEMS){
+      if (estFait(it.id) || vus.has(it.id)) continue;
+      if ((it.dep || []).includes(cur)){ vus.add(it.id); pile.push(it.id); }
+    }
+  }
+  return vus.size;
+}
+
+/* ============================================================
+   3. FILTRES
+   ============================================================ */
+let fApp = 'tous';
+let fVue = 'pret';
+
+/* ============================================================
+   4. RENDU
+   ============================================================ */
+const elVannes  = document.getElementById('vannes');
+const elListes  = document.getElementById('listes');
+const elCompte  = document.getElementById('compte');
+const elGeste   = document.getElementById('geste-texte');
+const elPourquoi= document.getElementById('geste-pourquoi');
+
+function txt(el, s){ el.textContent = s; }
+
+function rendreVannes(){
+  const socles = ITEMS.filter(i => i.socle || i.cout === OREILLE);
+  elVannes.innerHTML = '';
+  socles
+    .map(s => ({s, n: retenusPar(s.id)}))
+    .sort((a,b) => b.n - a.n)
+    .forEach(({s,n}) => {
+      const b = document.createElement('button');
+      b.className = 'vanne';
+      b.type = 'button';
+      b.dataset.ouverte = estFait(s.id) ? 'oui' : 'non';
+      b.setAttribute('aria-label', s.id + ' — ' + s.titre);
+
+      const cle = document.createElement('span');
+      cle.className = 'cle'; cle.textContent = s.id;
+
+      const quoi = document.createElement('span');
+      quoi.className = 'quoi';
+      quoi.textContent = s.cout === OREILLE
+        ? s.titre.split('.')[0] + ' — à l\u2019oreille'
+        : s.titre.split(':')[0];
+
+      const ret = document.createElement('span');
+      ret.className = 'retenu';
+      ret.textContent = estFait(s.id)
+        ? 'ouvert'
+        : (n === 0 ? 'ne retient rien' : n + (n > 1 ? ' items retenus' : ' item retenu'));
+
+      b.append(cle, quoi, ret);
+      b.addEventListener('click', () => {
+        const l = document.getElementById('item-' + s.id);
+        if (l){ fVue = 'tout'; syncFiltres(); rendre();
+                document.getElementById('item-' + s.id)
+                  .scrollIntoView({behavior:'smooth', block:'center'}); }
+      });
+      elVannes.appendChild(b);
+    });
+}
+
+/* Le prochain geste : parmi les items prêts, celui qui débloque le plus.
+   À égalité, le moins coûteux passe devant. */
+const RANG_COUT = {'oreille':0,'très faible':1,'faible':2,'—':2,'moyen':3};
+function rendreGeste(){
+  const prets = ITEMS.filter(estPret);
+  if (!prets.length){
+    txt(elGeste, 'Tout est fait.');
+    txt(elPourquoi, 'Décoche un item pour rouvrir un chantier.');
+    return;
+  }
+  const meilleur = prets
+    .map(it => ({it, n: retenusPar(it.id)}))
+    .sort((a,b) => b.n - a.n
+                || (RANG_COUT[a.it.cout] ?? 9) - (RANG_COUT[b.it.cout] ?? 9))[0];
+  const {it, n} = meilleur;
+  txt(elGeste, it.id + ' — ' + it.titre);
+  txt(elPourquoi,
+    NOM_APP[it.app] + ' · coût ' + it.cout +
+    (n > 0 ? ' · débloque ' + n + (n > 1 ? ' items' : ' item') : ' · ne débloque rien d\u2019autre') +
+    (it.cout === OREILLE ? ' · ne se code pas : se tranche la guitare en main.' : ''));
+}
+
+function carte(it){
+  const li = document.createElement('li');
+  li.className = 'item';
+  li.id = 'item-' + it.id;
+  li.dataset.fait = estFait(it.id) ? 'oui' : 'non';
+
+  const ch = document.createElement('input');
+  ch.type = 'checkbox'; ch.className = 'coche';
+  ch.checked = estFait(it.id);
+  ch.setAttribute('aria-label', 'Marquer ' + it.id + ' comme fait');
+  ch.addEventListener('change', () => { noter(it.id, ch.checked); rendre(); });
+
+  const corps = document.createElement('div');
+
+  const l1 = document.createElement('div');
+  l1.className = 'ligne1';
+  const sid = document.createElement('span'); sid.className = 'id'; sid.textContent = it.id;
+  const sap = document.createElement('span'); sap.className = 'appe'; sap.textContent = NOM_APP[it.app];
+  const sco = document.createElement('span'); sco.className = 'cout';
+  sco.textContent = it.cout === OREILLE ? 'à l\u2019oreille' : it.cout;
+  l1.append(sid, sap, sco);
+
+  const t = document.createElement('p'); t.className = 'titre'; t.textContent = it.titre;
+  corps.append(l1, t);
+
+  const bl = bloqueursDe(it);
+  if (bl.length && !estFait(it.id)){
+    const r = document.createElement('p');
+    r.className = 'raison verrou';
+    r.innerHTML = 'Retenu par <b>' + bl.join('</b>, <b>') + '</b>.';
+    corps.appendChild(r);
+  }
+  if (it.raison){
+    const r = document.createElement('p');
+    r.className = 'raison'; r.textContent = it.raison;
+    corps.appendChild(r);
+  }
+  if (it.paire){
+    const p = document.createElement('p');
+    p.className = 'paire';
+    p.textContent = 'Fait la paire avec ' + it.paire.join(', ') + '.';
+    corps.appendChild(p);
+  }
+
+  li.append(ch, corps);
+  return li;
+}
+
+function bloc(titre, note, liste){
+  const s = document.createElement('section');
+  s.className = 'bloc';
+  const h = document.createElement('h2'); h.textContent = titre;
+  s.appendChild(h);
+  if (note){ const p = document.createElement('p'); p.className='note'; p.textContent = note; s.appendChild(p); }
+  if (!liste.length){
+    const v = document.createElement('p'); v.className = 'vide';
+    v.textContent = 'Rien ici pour l\u2019instant.';
+    s.appendChild(v);
+  } else {
+    const ul = document.createElement('ul'); ul.className = 'items';
+    liste.forEach(it => ul.appendChild(carte(it)));
+    s.appendChild(ul);
+  }
+  return s;
+}
+
+function rendre(){
+  rendreVannes();
+  rendreGeste();
+  elListes.innerHTML = '';
+
+  const visibles = ITEMS.filter(it => fApp === 'tous' || it.app === fApp);
+  const prets   = visibles.filter(estPret);
+  const bloques = visibles.filter(it => !estFait(it.id) && !estPret(it));
+  const finis   = visibles.filter(it => estFait(it.id));
+
+  const oreille = prets.filter(i => i.cout === OREILLE);
+  const clavier = prets.filter(i => i.cout !== OREILLE);
+
+  if (fVue === 'pret'){
+    if (oreille.length) elListes.appendChild(bloc(
+      'Guitare en main',
+      'Ne se code pas. Tant que ce n\u2019est pas tranché à l\u2019oreille, rien derrière ne peut être versé.',
+      oreille));
+    elListes.appendChild(bloc(
+      'Prêt à partir',
+      'Aucune dépendance restante. Ordonné par ce que chaque item libère derrière lui.',
+      clavier.slice().sort((a,b) => retenusPar(b.id) - retenusPar(a.id)
+        || (RANG_COUT[a.cout] ?? 9) - (RANG_COUT[b.cout] ?? 9))));
+    elListes.appendChild(bloc(
+      'En attente',
+      bloques.length + ' item' + (bloques.length > 1 ? 's' : '') +
+      ' que rien ne permet d\u2019attaquer aujourd\u2019hui. Passe en vue « Tout » pour voir par qui.',
+      []));
+  } else {
+    const groupes = {};
+    visibles.forEach(it => { (groupes[it.phase] ||= []).push(it); });
+    Object.keys(groupes).forEach(ph => elListes.appendChild(bloc(ph, '', groupes[ph])));
+  }
+
+  elCompte.textContent = finis.length + ' / ' + visibles.length + ' faits · '
+    + prets.length + ' prêt' + (prets.length > 1 ? 's' : '');
+}
+
+/* ============================================================
+   5. INTERACTIONS
+   ============================================================ */
+function syncFiltres(){
+  document.querySelectorAll('[data-app]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.app === fApp)));
+  document.querySelectorAll('[data-vue]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.vue === fVue)));
+}
+document.querySelectorAll('[data-app]').forEach(b =>
+  b.addEventListener('click', () => { fApp = b.dataset.app; syncFiltres(); rendre(); }));
+document.querySelectorAll('[data-vue]').forEach(b =>
+  b.addEventListener('click', () => { fVue = b.dataset.vue; syncFiltres(); rendre(); }));
+document.getElementById('raz').addEventListener('click', () => {
+  faits = {};
+  try { localStorage.removeItem(CLE); } catch(e){}
+  rendre();
+});
+
+syncFiltres();
+rendre();
+})();
+</script>
+</body>
+</html>
