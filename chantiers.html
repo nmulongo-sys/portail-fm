@@ -156,6 +156,14 @@ li.item:first-child{border-top:1px solid var(--trait)}
 }
 .verrou{color:var(--rouille)}
 .verrou b{font-weight:600}
+/* Une révision doit se voir. Une roadmap qui se corrige en silence ne se
+   distingue plus d'une roadmap qui a toujours eu raison. */
+.revise{border-left-color:var(--rouille)}
+.depot{border-left-color:var(--or);color:var(--sepia-3)}
+li.item[data-fait="oui"] .revise,
+li.item[data-fait="oui"] .depot{opacity:.85;text-decoration:none}
+.coche:disabled{cursor:not-allowed}
+#purge{font-size:.8rem;color:var(--rouille);margin:.4rem 0 0}
 li.item[data-fait="oui"] .titre,
 li.item[data-fait="oui"] .ligne1{opacity:.42;text-decoration:line-through;text-decoration-thickness:1px}
 li.item[data-fait="oui"] .raison{opacity:.42;text-decoration:none}
@@ -219,7 +227,12 @@ footer button{
 <main id="listes"></main>
 
 <footer>
-  <p>Les cases cochées restent dans ce navigateur (<code>fm.chantiers.v1</code>).
+  <p id="purge" hidden></p>
+  <p>Deux achèvements différents. <b>Fait dans le dépôt</b> — le code existe, les tests
+  passent, le commit est nommé : c'est dans le fichier, la case est verrouillée.
+  <b>Case cochée</b> — ce qui se fait hors dépôt, une écoute tranchée, un arbitrage rendu :
+  ça reste dans ce navigateur (<code>fm.chantiers.v1</code>) et ne suit pas d'un appareil
+  à l'autre. Si un item disparaît ou change de place, sa coche est purgée et signalée.
      Rien n'est envoyé nulle part.
      <button type="button" id="raz">Tout décocher</button></p>
   <p>Sources : <code>00-decisions-actees.md</code>, <code>01-roadmap-improvguit.md</code>,
@@ -246,8 +259,10 @@ const ITEMS = [
 
   /* ---------- socle commun aux trois apps ---------- */
   {id:'CP-17', app:'CP', socle:true, phase:'Socle · SPEC-GRILLE v1', cout:'moyen', dep:[],
+   fait:true, commit:'e5cf7d7', date:'15 août 2026',
    titre:"SPEC-GRILLE v1 : cinq états X x - . m, ligne de frappe séparée, slots arbitraires, champ groupement, mesure obligatoire.",
-   raison:"Modèle de données commun aux trois apps (00 §2). Aucun patron ne se verse avant. Verser puis migrer, c'est réencoder deux fois — la conversion inverse est lossy."},
+   raison:"Modèle de données commun aux trois apps (00 §2). Aucun patron ne se verse avant. Verser puis migrer, c'est réencoder deux fois — la conversion inverse est lossy.",
+   revise:"Périmètre réduit le 15 août : la restitution sonore du patron en sort et devient CP-26. Ce qui est livré est le modèle de données, le linter, l'affichage à deux lignes. 153 vérifications."},
 
   {id:'S-ART', app:'SO', socle:true, phase:'Socle · corpus partagés', cout:'moyen', dep:[],
    titre:"Corpus PISTE-ARTICULATION : les sept étapes de 00 §5 mises en données, une seule fois.",
@@ -339,10 +354,22 @@ const ITEMS = [
    titre:"Rampe blues shuffle : huit plages enregistrées, employées par aucun exercice vérifié. Vérifier avant de verser."},
 
   {id:'CP-18', app:'CP', phase:'comping · phase 1', cout:'faible', dep:['CP-17'],
-   titre:"Migrer les patrons existants : ↓ → x/d, ↑ → x/u, · → ./. Conversion mécanique et sans perte."},
+   fait:true, commit:'e5cf7d7', date:'15 août 2026',
+   titre:"Migrer les patrons existants : ↓ → x/d, ↑ → x/u, · → x ou . selon la ligne. Six cartes, pas quatre-vingts.",
+   revise:"La conversion N'EST PAS mécanique, contrairement à ce qui était écrit ici : le dessin ↓ ↓↑ ·↑ ↓↑ ne dit pas si le premier temps est une noire ou une croche suivie d'un silence. C'est la CONSIGNE de chaque carte qui tranche. Et « · → ./. » était faux : le point devient un rien dans la grille, jamais dans la frappe — la main continue. Les six patrons migrés ont d'ailleurs tous la même ligne de frappe."},
   {id:'CP-19', app:'CP', phase:'comping · phase 1', cout:'faible', dep:['CP-17'],
-   titre:"X7 : découpler la mesure. Le champ mesurable se dérive de la grille au lieu d'être saisi.",
-   raison:"Tombe gratuitement de CP-17 : les figures à palm mute deviennent partiellement mesurables sans toucher au moteur de détection."},
+   fait:true, commit:'e5cf7d7', date:'15 août 2026',
+   titre:"X7 : découpler la mesure. Le champ mesurable se dérive de la grille — dans un seul sens.",
+   raison:"Tombe de CP-17 sans toucher au moteur de détection.",
+   revise:"La raison inscrite ici était FAUSSE et aurait produit un bug silencieux : « les figures à palm mute deviennent partiellement mesurables ». Non. Une carte de palm mute a des attaques ouvertes en quantité et reste écartée — l'accroche mesurée y tombe à 0,31 (§3.2). La dérivation ne peut que RETIRER la mesurabilité, jamais l'accorder, sinon elle remet ces cartes sous mesure et efface leur motif. Erreur trouvée par les tests, le 15 août."},
+  {id:'CP-26', app:'CP', phase:'comping · phase 1', cout:'élevé', dep:['CP-17'],
+   titre:"Restituer le patron en boucle pendant tout l'exercice : la carte se donne à entendre, pas seulement à lire.",
+   raison:"Sorti de CP-17 le 15 août, décision D4. La machine juge la RÉGULARITÉ, pas la conformité au patron : c'est l'oreille qui vérifie qu'on a laissé les trous. Conséquence dure — le casque devient une condition de validité de la mesure : un clic reste discriminable d'une attaque de guitare, un motif percussif ne l'est pas. Sur haut-parleur, l'app mesurerait sa propre restitution. Seule partie du chantier dont une erreur ne se verrait pas dans les tests : elle s'entendrait, en fausse mesure."},
+
+  {id:'X13', app:'CP', phase:'comping · point ouvert', cout:'oreille', dep:[],
+   titre:"Marquer qu'un accord anticipé appartient à la mesure SUIVANTE.",
+   raison:"Ouvert par Jean le 15 août : « cet accord introduit la mesure suivante ». L'anticipation est un déplacement harmonique, pas rythmique. La grille dit quand ça sonne, jamais quel accord (V5) — appliqué à une grille de chanson, un patron anticipé posera l'accord PRÉCÉDENT sur la frappe anticipée. Juste rythmiquement, faux harmoniquement, et inaudible dans l'app. Piste : un champ donnant le nombre de cases finales qui portent l'harmonie d'après ; insuffisant pour les phrases multi-mesures. Ne bloque ni comping ni le métronome — bloque l'intégration du répertoire."},
+
   {id:'CP-20', app:'CP', phase:'comping · phase 1', cout:'moyen', dep:['W1','W2'],
    titre:"X5 : le tempo à trois niveaux — genre → rampe de huit paliers, style → fourchette, carte → hérite."},
 
@@ -428,9 +455,36 @@ const PAR_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 const CLE = 'fm.chantiers.v1';
 let faits = {};
 try { faits = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch(e){ faits = {}; }
-const estFait = id => faits[id] === true;
+
+/* Deux sources d'achèvement, et elles ne sont pas de même nature.
+
+   `fait:true` dans ITEMS est un FAIT DU DÉPÔT : le code existe, les tests
+   passent, le commit est nommé. Ce n'est pas l'affaire d'une case à cocher, et
+   ça ne doit pas dépendre du navigateur qu'on a sous la main.
+
+   La case cochée, elle, dit ce que JEAN a fait hors dépôt — une écoute tranchée,
+   un arbitrage rendu, une pratique menée. Elle vit en local et n'a pas à monter
+   dans le fichier.
+
+   Le fichier gagne quand les deux se contredisent : décocher un item marqué fait
+   dans le dépôt ne veut rien dire. */
+/* PAR_ID est déjà construit plus haut : le redéclarer ferait deux index d'une
+   même liste, qui divergeraient au premier ajout d'item. */
+const faitAuDepot = id => !!(PAR_ID[id] && PAR_ID[id].fait);
+const estFait = id => faitAuDepot(id) || faits[id] === true;
 function noter(id, v){
+  if (faitAuDepot(id)) return;
   if (v) faits[id] = true; else delete faits[id];
+  try { localStorage.setItem(CLE, JSON.stringify(faits)); } catch(e){}
+}
+
+/* Un item peut être transféré ailleurs, scindé, ou disparaître. Sa coche, elle,
+   survivrait indéfiniment dans le navigateur et fausserait les décomptes sans
+   que rien ne le signale. On la purge, et on le DIT — une correction muette est
+   pire que l'erreur qu'elle corrige. */
+const ORPHELINS = Object.keys(faits).filter(id => !PAR_ID[id]);
+if (ORPHELINS.length){
+  ORPHELINS.forEach(id => { delete faits[id]; });
   try { localStorage.setItem(CLE, JSON.stringify(faits)); } catch(e){}
 }
 
@@ -461,6 +515,12 @@ let fVue = 'pret';
 /* ============================================================
    4. RENDU
    ============================================================ */
+const elPurge   = document.getElementById('purge');
+if (ORPHELINS.length && elPurge){
+  elPurge.hidden = false;
+  elPurge.textContent = 'Coches purgées — ' + ORPHELINS.join(', ') +
+    (ORPHELINS.length > 1 ? ' ne figurent plus au graphe.' : ' ne figure plus au graphe.');
+}
 const elVannes  = document.getElementById('vannes');
 const elListes  = document.getElementById('listes');
 const elCompte  = document.getElementById('compte');
@@ -539,8 +599,14 @@ function carte(it){
   const ch = document.createElement('input');
   ch.type = 'checkbox'; ch.className = 'coche';
   ch.checked = estFait(it.id);
-  ch.setAttribute('aria-label', 'Marquer ' + it.id + ' comme fait');
-  ch.addEventListener('change', () => { noter(it.id, ch.checked); rendre(); });
+  if (faitAuDepot(it.id)){
+    ch.disabled = true;
+    ch.setAttribute('aria-label', it.id + ' — fait dans le dépôt, commit ' + (it.commit||'?'));
+    ch.title = 'Fait dans le dépôt — ne se décoche pas.';
+  } else {
+    ch.setAttribute('aria-label', 'Marquer ' + it.id + ' comme fait');
+    ch.addEventListener('change', () => { noter(it.id, ch.checked); rendre(); });
+  }
 
   const corps = document.createElement('div');
 
@@ -572,6 +638,20 @@ function carte(it){
     p.className = 'paire';
     p.textContent = 'Fait la paire avec ' + it.paire.join(', ') + '.';
     corps.appendChild(p);
+  }
+  /* Un item révisé porte la trace de ce qui a changé. Une roadmap qui se corrige
+     en silence ne se distingue plus d'une roadmap qui a toujours eu raison. */
+  if (it.revise){
+    const r = document.createElement('p');
+    r.className = 'raison revise'; r.textContent = 'Révisé — ' + it.revise;
+    corps.appendChild(r);
+  }
+  if (it.fait){
+    const d = document.createElement('p');
+    d.className = 'raison depot';
+    d.textContent = 'Fait dans le dépôt' + (it.commit ? ', commit ' + it.commit : '') +
+                    (it.date ? ' — ' + it.date : '') + '.';
+    corps.appendChild(d);
   }
 
   li.append(ch, corps);
